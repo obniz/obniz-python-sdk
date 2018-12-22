@@ -1,0 +1,37 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+test = "pytest -vv"
+lint = "sh -c 'flake8 && pipenv run format --check'"
+format = "black obniz/ tests/ "
+build = "sh -c 'rm  -rf build/ dist/ obniz.egg-info/ && python setup.py sdist bdist_wheel'"
+testsubmit = "twine upload --repository testpypi dist/*"
+# no shortcut for production  submit for safe
+
+[packages]
+pyee = "*"
+websockets = "*"
+
+[dev-packages]
+asynctest = "*"
+black = "*"
+jsonschema = "*"
+"flake8" = "*"
+flake8-import-order = "*"
+pep8-naming = "*"
+pytest = "*"
+pytest-mock = "*"
+pyyaml = "*"
+setuptools = "*"
+wheel = "*"
+twine = "*"
+tox = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

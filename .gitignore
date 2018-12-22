@@ -1,0 +1,5 @@
+/build/
+/dist/
+/obniz.egg-info/
+/.tox/
+__pycache__/
