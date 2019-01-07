@@ -54,23 +54,25 @@ class TestInit:
         future = loop.create_future()
 
         async def on_connection(websocket, path):
-            print("server(" + str(port) + "): connected")
+            try:
+                print("server(" + str(port) + "): connected")
+                future.set_result(websocket)
 
-            val = [{"ws": {"redirect": "ws://localhost:" + str(port2)}}]
+                await websocket.recv()
+            except Exception as e:
+                future.set_exception(e)
 
-            results = validator.response_validate(val, "json")
-            assert results["valid"], results["errors"]
-
-            await websocket.send(json.dumps(val))
-
-            future.set_result(None)
-
+        print("create_server(" + str(port) + ")")
         server = create_server(port, on_connection)
+        print("create_obniz")
         obniz = create_obniz(port, "11111111")
+        obniz.debugprint = True
 
         assert_obniz(obniz)
 
-        loop.run_until_complete(future)
+        print("wait future")
+        websocket = loop.run_until_complete(future)
+        print("done future")
 
         self._wait(wait_ms)
 
@@ -78,14 +80,28 @@ class TestInit:
         future2 = loop.create_future()
 
         async def on_connection2(websocket, path):
-            # TODO: server側のconnectedは出るけどclient側が出ない。本当につながってるか確認s
-            print("server(" + str(port) + "): connected")
+            try:
+                print("server(" + str(port2) + "): connected")
+                future2.set_result(None)
 
-            future2.set_result(None)
+                await websocket.recv()
+            except Exception as e:
+                future2.set_exception(e)
 
+        print("create_server(" + str(port2) + ")")
         server2 = create_server(port2, on_connection2)
 
+        val = [{"ws": {"redirect": "ws://localhost:" + str(port2)}}]
+
+        results = validator.response_validate(val, "json")
+        assert results["valid"], results["errors"]
+
+        print("send redirect signal")
+        loop.run_until_complete(websocket.send(json.dumps(val)))
+
+        print("wait future2")
         loop.run_until_complete(future2)
+        print("done future2")
 
         self._wait(wait_ms)
 
