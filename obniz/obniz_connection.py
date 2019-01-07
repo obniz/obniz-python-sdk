@@ -167,8 +167,12 @@ class ObnizConnection:
                     try:
                         data = await websocket.recv()
                         self.ws_on_message(data)
-                    except websockets.exceptions.ConnectionClosed:
+                    except websockets.exceptions.ConnectionClosed as e:
+                        print(e)
                         self.ws_on_close()
+                        break
+                    except Exception as e:
+                        print(e)
                         break
 
         asyncio.ensure_future(connecting())

@@ -17,7 +17,11 @@ websockets = "*"
 
 [dev-packages]
 asynctest = "*"
-black = "*"
+# "black" requires python 3.6+
+# so if it exists in Pipfile, `pipenv insttall` must fail on Travis CI python 3.5
+# please install by your self via `pipenv run pip install black`
+# (avoid `pipenv install black` in order to bypass adding "black" to Pipfile)
+# black = "*"
 jsonschema = "*"
 "flake8" = "*"
 flake8-import-order = "*"
@@ -29,9 +33,3 @@ setuptools = "*"
 wheel = "*"
 twine = "*"
 tox = "*"
-
-[requires]
-python_version = "3.7"
-
-[pipenv]
-allow_prereleases = true
