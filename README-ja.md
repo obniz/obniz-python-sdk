@@ -2,15 +2,11 @@
 
 # obniz.py: sdk for python
 
-[obniz](https://obniz.io/) sdk for python.
+[obniz](https://obniz.io/)をpythonから操作するためのsdkです。
 
-Control obniz from python.
+**Python 3.5以上**で動作します。
 
-This sdk works with [obniz api](https://obniz.io/doc/about_obniz_api).
-
-Compatible with **Python 3.5+**.
-
-## Usage
+## 使い方
 ```py
     import asyncio
 
@@ -53,22 +49,22 @@ Compatible with **Python 3.5+**.
     asyncio.get_event_loop().run_forever()
 ```
 
-## Installation
+## インストール
 
-Install obniz via pip
+pipでインストールします。
 ```shell
   pip install obniz
 ```
-and import it on python file.
+そしてpythonの中でimportして下さい。
 ```python
   from obniz import Obniz
 ```
 
-## Connect
+## 接続
 
-Details on [doc/connection](https://obniz.io/doc/sdk/doc/connection)
+[詳細](https://obniz.io/doc/sdk/doc/connection)
 
-To use obniz, instantiate obniz with obniz id. and set onconnect callback function. It will be called when connected to obniz successfully.
+obnizをobniz idを使ってインスタンス化します。 そして接続が完了した時に呼ばれる関数をセットします。
 ```python
     import asyncio
 
@@ -83,7 +79,7 @@ To use obniz, instantiate obniz with obniz id. and set onconnect callback functi
     asyncio.get_event_loop().run_forever()
 ```
 
-You are able to use everything on obniz after connect.
+接続完了後にobnizやobnizにつながれた部品を扱えます。
 ```python
     async def onconnect(obniz):
         obniz.io0.drive("5v")
@@ -116,8 +112,8 @@ You are able to use everything on obniz after connect.
 ```
 
 ## Example
-Easy to integrate python libraries like TensorFlow.
-(need to install `tensorflow` and `opencv-python`)
+TensorFlowなどのpythonライブラリもとても簡単に行なえます。
+(`tensorflow` と `opencv-python` のインストールが必要です)
 ```py
     import asyncio
 
@@ -224,5 +220,5 @@ Easy to integrate python libraries like TensorFlow.
     asyncio.get_event_loop().run_forever()
 ```
 
-## Documentation
-You can find the documentation on [the website](https://obniz.io/doc/).
+## ドキュメント
+[公式サイト](https://obniz.io/doc/)
