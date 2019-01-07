@@ -2,7 +2,7 @@
 
 [obniz](https://obniz.io/)をpythonから操作するためのsdkです。
 
-**Python 3.5以上**で動作します。
+**Python 3.6以上**で動作します。
 
 <img src="https://object-storage.tyo1.conoha.io/v1/nc_35a49f4e51c74e35ad3493c52d37f63e/images/obniz-python-readme.gif" width="100%" />
 
