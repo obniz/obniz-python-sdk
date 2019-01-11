@@ -1,5 +1,7 @@
 # obniz.py: sdk for python
 
+[![image](https://img.shields.io/pypi/pyversions/obniz.svg)](https://pypi.org/project/obniz/)
+
 [obniz](https://obniz.io/) sdk for python.
 
 Control obniz from python.
