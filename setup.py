@@ -1,11 +1,14 @@
 import setuptools
 
+from obniz.__version__ import __version__
+
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="obniz",
-    version="0.1.0",
+    version=__version__,
     author="yukisato",
     author_email="yuki@yuki-sato.com",
     description="obniz sdk for python",
@@ -19,6 +22,8 @@ setuptools.setup(
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         "Operating System :: OS Independent",
     ],
 )

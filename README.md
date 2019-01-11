@@ -6,7 +6,7 @@ Control obniz from python.
 
 This sdk works with [obniz api](https://obniz.io/doc/about_obniz_api).
 
-Compatible with **Python 3.5+**.
+Compatible with **Python 3.6+**.
 
 <img src="https://object-storage.tyo1.conoha.io/v1/nc_35a49f4e51c74e35ad3493c52d37f63e/images/obniz-python-readme.gif" width="100%" />
 
