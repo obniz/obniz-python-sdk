@@ -20,7 +20,6 @@ setuptools.setup(
         'pyee==5.0.0',
         'websockets==7.0'
     ],
-    python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",
         'Programming Language :: Python :: 3.6',
