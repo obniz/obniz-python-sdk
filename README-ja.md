@@ -1,5 +1,7 @@
 # obniz.py: sdk for python
 
+[![image](https://img.shields.io/pypi/pyversions/obniz.svg)](https://pypi.org/project/obniz/)
+
 [obniz](https://obniz.io/)をpythonから操作するためのsdkです。
 
 **Python 3.6以上**で動作します。
