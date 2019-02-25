@@ -1,4 +1,5 @@
 from .libs.embeds.ble.ble import ObnizBLE
+from .libs.embeds.display import Display
 from .libs.embeds.switch import ObnizSwitch
 from .libs.io_peripherals.ad import PeripheralAD
 from .libs.io_peripherals.i2c import PeripheralI2C
@@ -44,7 +45,7 @@ class ObnizComponents(ObnizConnection):
         for i in range(0, 6):
             setattr(self, "pwm" + str(i), PeripheralPWM(self, i))
 
-        # setattr(self, "display", Display(self))
+        setattr(self, "display", Display(self))
         setattr(self, "switch", ObnizSwitch(self))
         setattr(self, "logicAnalyzer", LogicAnalyzer(self))
         setattr(self, "ble", ObnizBLE(self))
