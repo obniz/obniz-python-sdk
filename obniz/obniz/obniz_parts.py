@@ -42,5 +42,19 @@ class ObnizParts(ObnizConnection):
         
         parts.obniz = self
         parts.wired(parts.obniz)
+        if parts.keys or parts.io_keys:
+            keys = parts.keys if hasattr(parts, "keys") else parts.io_keys
+            display_parts_name = parts.display_name if hasattr(parts, "display_name") else partsname
+            io_names = {}
 
+            for key in keys:
+                pin_name = key
+                io = param[pin_name] if pin_name in param else None
+                if self.is_valid_io(io):
+                    if hasattr(parts, "display_io_names") and parts.display_io_names[pin_name]:
+                        pin_name = parts.display_io_names[pin_name]
+                    io_names[io] = pin_name
+            
+            self.display.set_pin_names(display_parts_name, io_names)
+        
         return parts

@@ -1,6 +1,6 @@
 import json
 
-from obniz.libs.utils.util import ObnizUtil
+from obniz.obniz.libs.utils.util import ObnizUtil
 from ....utils import assert_finished, assert_send, receive_json
 
 
