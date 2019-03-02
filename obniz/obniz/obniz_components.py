@@ -11,9 +11,10 @@ from .libs.io_peripherals.uart import PeripheralUART
 from .libs.measurements.logicanalyzer import LogicAnalyzer
 from .libs.measurements.measure import ObnizMeasure
 from .obniz_connection import ObnizConnection
+from .obniz_parts import ObnizParts
 
 
-class ObnizComponents(ObnizConnection):
+class ObnizComponents(ObnizParts):
     def __init__(self, id, options):
         super().__init__(id, options)
 
