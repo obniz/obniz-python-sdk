@@ -151,7 +151,8 @@ class ObnizConnection:
 
         url = server + "/obniz/{}/ws/1".format(self.id)
 
-        query = ["obnizjs=" + __version__]
+        # query = ["obnizjs=" + __version__]
+        query = []
         if self.options["access_token"]:
             query.append("access_token=" + self.options["access_token"])
         url += "?" + "&".join(query)
