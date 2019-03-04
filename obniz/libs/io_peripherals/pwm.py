@@ -63,7 +63,7 @@ class PeripheralPWM:
         if type(self.state["freq"]) is not int or self.state["freq"] <= 0:
             raise Exception("please provide freq first.")
 
-        if type(duty) is not float:
+        if type(duty) is not int and type(duty) is not float:
             raise Exception("please provide duty in number")
 
         if duty < 0:

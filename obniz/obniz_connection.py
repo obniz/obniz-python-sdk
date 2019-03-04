@@ -151,7 +151,7 @@ class ObnizConnection:
 
         url = server + "/obniz/{}/ws/1".format(self.id)
 
-        query = ["obnizjs=" + __version__]
+        query = ["obnizpy=" + __version__]
         if self.options["access_token"]:
             query.append("access_token=" + self.options["access_token"])
         url += "?" + "&".join(query)
@@ -323,7 +323,7 @@ class ObnizConnection:
 
     def send(self, obj, options=None):
         if obj is None:
-            print("obnizjs. didnt send ", obj)
+            print("obnizpy. didnt send ", obj)
             return
 
         if type(obj) is list:
