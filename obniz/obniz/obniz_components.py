@@ -123,6 +123,17 @@ class ObnizComponents(ObnizParts):
     def is_valid_io(self, io):
         return type(io) is int and io >= 0 and io < 12
 
+    def set_vcc_gnd(self, vcc, gnd, drive=None):
+        if self.is_valid_io(vcc):
+            if drive:
+                self.get_io(vcc).drive(drive)
+            self.get_io(vcc).output(True)
+        
+        if self.is_valid_io(gnd):
+            if drive:
+                self.get_io(gnd).drive(drive)
+            self.get_io(gnd).output(False)
+
     #   setVccGnd(vcc, gnd, drive) {
     #     if (self.isValidIO(vcc)) {
     #       if (drive) {

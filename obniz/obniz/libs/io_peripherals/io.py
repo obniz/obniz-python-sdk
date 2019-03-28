@@ -1,3 +1,5 @@
+import asyncio
+
 class PeripheralIO:
     def __init__(self, obniz, id):
         self.obniz = obniz
@@ -63,11 +65,13 @@ class PeripheralIO:
         self.obniz.send(obj)
         return self.value
 
-    def input_wait(self, callback):
-        self.add_observer(callback)
+    def input_wait(self):
+        future = asyncio.Future()
+        self.add_observer(future)
         obj = {}
         obj["io" + str(self.id)] = {"direction": "input", "stream": False}
         self.obniz.send(obj)
+        return future
 
     def end(self):
         obj = {}
@@ -78,8 +82,11 @@ class PeripheralIO:
         if type(obj) is bool:
             self.value = obj
             if len(self.observers) > 0:
-                callback = self.observers.pop(0)
-                callback(obj)
+                item = self.observers.pop(0)
+                if callable(item): # callback
+                    item(obj)
+                else: # future
+                    item.set_result(obj)
 
             if self.onchange:
                 self.onchange(obj)

@@ -1,3 +1,5 @@
+import asyncio
+
 class PeripheralAD:
     def __init__(self, obniz, id):
         self.obniz = obniz
@@ -20,11 +22,13 @@ class PeripheralAD:
         self.obniz.send(obj)
         return self.value
 
-    def get_wait(self, callback):
-        self.add_observer(callback)
+    def get_wait(self):
+        future = asyncio.Future()
+        self.add_observer(future)
         obj = {}
         obj["ad" + str(self.id)] = {"stream": False}
         self.obniz.send(obj)
+        return future
 
     def end(self):
         self.onchange = None
@@ -38,5 +42,8 @@ class PeripheralAD:
             self.onchange(obj)
 
         if len(self.observers) > 0:
-            callback = self.observers.pop(0)
-            callback(obj)
+            item = self.observers.pop(0)
+            if callable(item): # callback
+                item(obj)
+            else: # future
+                item.set_result(obj)

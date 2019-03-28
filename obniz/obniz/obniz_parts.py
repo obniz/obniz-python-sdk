@@ -1,3 +1,5 @@
+from attrdict import AttrDefault
+
 from .obniz_connection import ObnizConnection
 from .libs.utils.util import ObnizUtil
 
@@ -38,7 +40,7 @@ class ObnizParts(ObnizConnection):
                         partsname + " wired param '" + err + "' required, but not found "
                     )
         
-            parts.params = ObnizUtil._key_filter(param, parts.keys)
+            parts.params = AttrDefault(bool, ObnizUtil._key_filter(param, parts.keys))
         
         parts.obniz = self
         parts.wired(parts.obniz)

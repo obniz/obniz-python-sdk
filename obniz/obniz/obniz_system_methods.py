@@ -1,7 +1,7 @@
 import math
 from random import random
-from time import sleep, time
-
+from time import time
+import asyncio
 from .obniz_components import ObnizComponents
 
 
@@ -16,7 +16,7 @@ class ObnizSystemMethods(ObnizComponents):
             msec = 60 * 1000
 
         self.send({"system": {"wait": msec}})
-        sleep(msec / 1000)
+        return asyncio.sleep(msec / 1000)
 
     def reset(self):
         self.send({"system": {"reset": True}})
