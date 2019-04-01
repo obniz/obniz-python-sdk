@@ -13,6 +13,8 @@ from .libs.measurements.measure import ObnizMeasure
 from .obniz_connection import ObnizConnection
 from .obniz_parts import ObnizParts
 
+import attrdict
+
 
 class ObnizComponents(ObnizParts):
     def __init__(self, id, options):
@@ -134,22 +136,6 @@ class ObnizComponents(ObnizParts):
                 self.get_io(gnd).drive(drive)
             self.get_io(gnd).output(False)
 
-    #   setVccGnd(vcc, gnd, drive) {
-    #     if (self.isValidIO(vcc)) {
-    #       if (drive) {
-    #         self.getIO(vcc).drive(drive)
-    #       }
-    #       self.getIO(vcc).output(true)
-    #     }
-
-    #     if (self.isValidIO(gnd)) {
-    #       if (drive) {
-    #         self.getIO(gnd).drive(drive)
-    #       }
-    #       self.getIO(gnd).output(false)
-    #     }
-    #   }
-
     def get_io(self, io):
         if not self.is_valid_io(io):
             raise Exception("io " + str(io) + " is not valid io")
@@ -173,62 +159,45 @@ class ObnizComponents(ObnizParts):
                 pwm.used = True
                 return pwm
 
-        raise Exception("No More PWM Available. max = " + i)
+        raise Exception("No More PWM Available. max = " + str(i))
 
+    def get_free_i2c(self):
+        for i in range(1):
+            i2c = getattr(self, "i2c" + str(i))
+            if not i2c:
+                break
+            if not i2c.is_used():
+                i2c.used = True
+                return i2c
+        raise Exception('No More I2C Available. max = ' + str(i))
 
-#   getFreeI2C() {
-#     i = 0
-#     for (i = 0 i < 1 i++) {
-#       i2c = self['i2c' + i]
-#       if (!i2c) {
-#         break
-#       }
-#       if (!i2c.isUsed()) {
-#         i2c.used = true
-#         return i2c
-#       }
-#     }
-#     throw new Error('No More I2C Available. max = ' + i)
-#   }
+    def get_i2c_with_config(self, config):
+        if type(config) not in [dict, attrdict.default.AttrDefault]:
+            raise Exception("get_i2c_with_config need config arg")
+        if config.get("i2c"):
+            return config.get("i2c")
+        i2c = self.get_free_i2c()
+        i2c.start(config)
+        return i2c
 
-#   getI2CWithConfig(config) {
-#     if (typeof config !== 'object') {
-#       throw new Error('getI2CWithConfig need config arg')
-#     }
-#     if (config.i2c) {
-#       return config.i2c
-#     }
-#     i2c = self.getFreeI2C()
-#     i2c.start(config)
-#     return i2c
-#   }
+    def get_free_spi(self):
+        for i in range(2):
+            spi = getattr(self, "spi" + str(i))
+            if not spi:
+                break
+            if not spi.is_used():
+                spi.used = True
+                return spi
+        raise Exception('No More SPI Available. max = ' + str(i))
 
-#   getFreeSpi() {
-#     i = 0
-#     for (i = 0 i < 2 i++) {
-#       spi = self['spi' + i]
-#       if (!spi) {
-#         break
-#       }
-#       if (!spi.isUsed()) {
-#         spi.used = true
-#         return spi
-#       }
-#     }
-#     throw new Error('No More SPI Available. max = ' + i)
-#   }
-
-#   getSpiWithConfig(config) {
-#     if (typeof config !== 'object') {
-#       throw new Error('getSpiWithConfig need config arg')
-#     }
-#     if (config.spi) {
-#       return config.spi
-#     }
-#     spi = self.getFreeSpi()
-#     spi.start(config)
-#     return spi
-#   }
+    def get_spi_with_config(self, config):
+        if type(config) not in [dict, attrdict.default.AttrDefault]:
+            raise Exception("get_spi_with_config need config arg")
+        if config.get("spi"):
+            return config.get("spi")
+        spi = self.get_free_spi()
+        spi.start(config)
+        return spi
 
 #   getFreeUart() {
 #     i = 0

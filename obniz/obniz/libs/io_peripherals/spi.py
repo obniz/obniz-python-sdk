@@ -2,6 +2,8 @@ from distutils.version import LooseVersion
 
 from ..utils.util import ObnizUtil
 
+import asyncio
+import semver
 
 class PeripheralSPI:
     def __init__(self, obniz, id):
@@ -85,7 +87,7 @@ class PeripheralSPI:
         self.used = True
         self.obniz.send(obj)
 
-    def write_wait(self, data, callback):
+    def write_wait(self, data):
         if not self.used:
             raise Exception("spi{} is not started".format(self.id))
 
@@ -102,43 +104,39 @@ class PeripheralSPI:
                 + ". Please update obniz firmware"
             )
 
-        self.add_observer(callback)
+        future = asyncio.Future()
+        self.add_observer(future)
         obj = {}
         obj["spi" + str(self.id)] = {"data": data, "read": True}
         self.obniz.send(obj)
+        return future
 
-    # write(data) {
-    #     if (!self.used) {
-    #     raise Exception(`spi${self.id} is not started`)
-    #     }
-    #     if (semver.lte(self.obniz.firmware_ver, '1.0.2') && data.length > 32) {
-    #     raise Exception(
-    #         `with your obniz ${
-    #         self.obniz.firmware_ver
-    #         }. spi max length=32byte but yours ${
-    #         data.length
-    #         }. Please update obniz firmware`
-    #     )
-    #     }
+    def write(self, data):
+        if not self.used:
+            raise Exception("spi{0} is not started".format(self.id))
+        if semver.match(self.obniz.firmware_ver, "<=1.0.2") and len(data) > 32:
+            raise Exception(
+                "with your obniz {0}. spi max length=32byte but yours {1}. Please update obniz firmware".format(
+                    self.obniz.firmware_ver, len(data)
+                )
+            )
 
-    #     self = self
-    #     obj = {}
-    #     obj['spi' + str(self.id)] = {
-    #     data: data,
-    #     read: False,
-    #     }
-    #     self.obniz.send(obj)
-    # }
+        obj = {}
+        obj['spi' + str(self.id)] = {
+            "data": data,
+            "read": False
+        }
+        self.obniz.send(obj)
 
     def notified(self, obj):
         # TODO: we should compare byte length from sent
         if len(self.observers) > 0:
             callback = self.observers.pop(0)
-            callback(obj["data"])
+            # callback(obj["data"])
+            callback.set_result(obj["data"])
 
-    # isUsed() {
-    #     return self.used
-    # }
+    def is_used(self):
+        return self.used
 
     def end(self, reuse=None):
         obj = {}

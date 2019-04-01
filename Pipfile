@@ -15,6 +15,7 @@ testsubmit = "twine upload --repository testpypi dist/*"
 pyee = "*"
 websockets = "*"
 attrdict = "*"
+semver = "*"
 
 [dev-packages]
 asynctest = "*"

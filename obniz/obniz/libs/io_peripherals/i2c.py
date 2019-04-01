@@ -1,5 +1,6 @@
 from ..utils.util import ObnizUtil
 
+import asyncio
 
 class PeripheralI2C:
     def __init__(self, obniz, id):
@@ -127,7 +128,7 @@ class PeripheralI2C:
         obj["i2c" + str(self.id)] = {"address": address, "data": data}
         self.obniz.send(obj)
 
-    def read_wait(self, address, length, callback):
+    def read_wait(self, address, length):
         if not self.used:
             raise Exception("i2c{} is not started".format(self.id))
 
@@ -145,10 +146,12 @@ class PeripheralI2C:
         if length > 1024:
             raise Exception("i2c: data length should be under 1024 bytes")
 
-        self.add_observer(callback)
+        future = asyncio.Future()
+        self.add_observer(future)
         obj = {}
         obj["i2c" + str(self.id)] = {"address": address, "read": length}
         self.obniz.send(obj)
+        return future
 
     def notified(self, obj):
         if obj and type(obj) is dict:
@@ -158,8 +161,8 @@ class PeripheralI2C:
                 else:
                     # TODO: we should compare byte length from sent
                     if len(self.observers) > 0:
-                        callback = self.observers.pop(0)
-                        callback(obj["data"])
+                        future = self.observers.pop(0)
+                        future.set_result(obj["data"])
             if "warning" in obj:
                 self.obniz.warning(
                     {
@@ -178,9 +181,8 @@ class PeripheralI2C:
                     }
                 )
 
-    # isUsed() {
-    #     return self.used
-    # }
+    def is_used(self):
+        return self.used
 
     def end(self):
         self.state = {}
