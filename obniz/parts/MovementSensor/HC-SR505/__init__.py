@@ -1,7 +1,7 @@
 from attrdict import AttrDefault
 import asyncio
 
-class HC_SR505:
+class HCSR505:
     def __init__(self):
         self.keys = ['vcc', 'gnd', 'signal']
         self.required_keys = ['signal']

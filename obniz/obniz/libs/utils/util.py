@@ -15,7 +15,7 @@ class ObnizUtil:
 
     @classmethod
     def _required_keys(cls, params, keys):
-        if type(params) is not dict:
+        if type(params) not in [dict, attrdict.default.AttrDefault]:
             return keys[0]
 
         for key in keys:

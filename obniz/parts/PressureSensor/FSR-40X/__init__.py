@@ -2,7 +2,7 @@ from attrdict import AttrDefault
 
 import asyncio
 
-class FSR_40X:
+class FSR40X:
     def __init__(self):
         self.keys = ['pin0', 'pin1']
         self.required_keys = ['pin0', 'pin1']

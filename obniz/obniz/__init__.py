@@ -92,4 +92,4 @@ for cls_path in cls_paths:
             "obniz.parts." + parts_cls + "." + part_name
             )
         # Registrate
-        Obniz.parts_registrate(getattr(module, part_name.replace("-", "_"))())
+        Obniz.parts_registrate(getattr(module, part_name.replace("-", ""))())
