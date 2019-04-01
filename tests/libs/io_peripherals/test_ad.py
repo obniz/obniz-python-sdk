@@ -68,10 +68,10 @@ class TestPeripheralAD:
         assert_finished(obniz)
 
     def test_input_wait_true(self, obniz):
-        def callback(result):
-            assert result == 2.6
+        # def callback(result):
+        #     assert result == 2.6
 
-        obniz.ad4.get_wait(callback)
+        obniz.ad4.get_wait()
 
         assert_obniz(obniz)
         assert_send(obniz, [{"ad4": {"stream": False}}])

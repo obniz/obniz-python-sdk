@@ -77,10 +77,10 @@ class TestPeripheralIO:
         assert_finished(obniz)
 
     def test_input_wait_true(self, obniz):
-        def callback(result):
-            assert result is True
+        # def callback(result):
+        #     assert result is True
 
-        obniz.io8.input_wait(callback)
+        obniz.io8.input_wait()
 
         assert_obniz(obniz)
         assert_send(obniz, [{"io8": {"direction": "input", "stream": False}}])
@@ -96,10 +96,10 @@ class TestPeripheralIO:
 
     # TODO: 怪しい
     def test_input_wait_false(self, obniz):
-        def callback(result):
-            pass
+        # def callback(result):
+        #     pass
 
-        obniz.io9.input_wait(callback)
+        obniz.io9.input_wait()
         assert_obniz(obniz)
         assert_send(obniz, [{"io9": {"direction": "input", "stream": False}}])
         assert_finished(obniz)
