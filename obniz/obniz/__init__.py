@@ -76,20 +76,24 @@ import pathlib
 import importlib
 
 # Get current working directory path
-basepath = pathlib.Path(__file__).parent
+basepath = pathlib.Path(__file__).parent.resolve()
 # Get parts library path
-basepath = pathlib.Path(str(basepath) + "/../parts").resolve()
+libpath = pathlib.Path(str(basepath) + "/../parts").resolve()
 # Get ALL parts class path
-cls_paths = glob.glob(str(basepath) + "/*")
+cls_paths = glob.glob(str(libpath) + "/*")
 for cls_path in cls_paths:
     parts_cls = pathlib.Path(cls_path).name
     # Get ALL parts path (including __init__.py)
-    parts = glob.glob(cls_path + "/*")
+    parts = glob.glob(cls_path + "/**/__init__.py", recursive=True)
     for part in parts:
-        part_name = pathlib.Path(part).name
+        partpath = pathlib.Path(part).resolve().parent
+        part_name = partpath.name.replace("-", "")
         # Import parts module
-        module = importlib.import_module(
-            "obniz.parts." + parts_cls + "." + part_name
-            )
-        # Registrate
-        Obniz.parts_registrate(getattr(module, part_name.replace("-", ""))())
+        module_path = "obniz" + str(partpath).replace(str(basepath.parent), "").replace("/", ".")
+        module = importlib.import_module(module_path)
+        try:
+            if "info" in dir(getattr(module, part_name)):
+                # Registrate
+                Obniz.parts_registrate(getattr(module, part_name)())
+        except AttributeError as e:
+            pass
