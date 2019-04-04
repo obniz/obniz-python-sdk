@@ -44,31 +44,31 @@ obnizのセットに入っているサーボモーターもこのパターンで
 信号(signal)、プラス(vcc)、マイナス(gnd)をそれぞれ obnizの0, 1, 2につないだ場合は以下のようにします。
 
 ![](./wired.png)
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
-servo.angle(90.0); // half position
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
+servo.angle(90.0) # half position
 ```
 
 vccとgndを他の方法で接続している場合はsignalのみの指定でOKです
-```Javascript
-var servo = obniz.wired("ServoMotor", {signal:2});
+```Python
+servo = obniz.wired("ServoMotor", {"signal": 2})
 ```
 
 また、生成済みのpwmオブジェクトを利用することも出来ます
-```Javascript
-var pwm = obniz.getFreePwm();
-var servo = obniz.wired("ServoMotor", {pwm:pwm});
+```Python
+pwm = obniz.get_free_pwm()
+servo = obniz.wired("ServoMotor", {"pwm": pwm})
 ```
 
 ## angle(degree)
 角度を0~180により指定します。
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 
-servo.angle(90.0); // half position
+servo.angle(90.0) # half position
 ```
 
 ## range = {min, max}
@@ -76,35 +76,35 @@ servo.angle(90.0); // half position
 出力するパルス幅を調整できます。
 0度~180度に応じて0.5~2.4msecのパルスが出力されますが、それを自分で調整したい場合に利用します。
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 servo.range = {
-  min: 0.8,
-  max: 2.4
+  "min": 0.8,
+  "max": 2.4
 }
-servo.angle(90.0); // half position
+servo.angle(90.0) # half position
 ```
 
-## on();
+## on()
 サーボモーターの電源を入れます。wiredを呼んだ段階で電源は入っています。offにした後に再度onにしたい時に呼んでください
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 
-servo.angle(90.0); // half position
-servo.off();
-servo.on();
+servo.angle(90.0) # half position
+servo.off()
+servo.on()
 ```
-## off();
+## off()
 サーボモーターの電源を切ります。信号の供給も停止します。保持力がなくなりますから、モーターに負荷がかかっている場合はoffにすることで勝手に回転します。
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 
-servo.angle(90.0); // half position
-servo.off();
-servo.on();
+servo.angle(90.0) # half position
+servo.off()
+servo.on()
 ```

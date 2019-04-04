@@ -49,34 +49,34 @@ If you connect signal,vcc and gnd to Obniz 0, 1, 2 respectively, write a code as
 
 ![](./wired.png)
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
-servo.angle(90.0); // half position
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
+servo.angle(90.0) # half position
 ```
 
 vcc and gnd is optional. When you connect vcc and gnd to other way, then just specify signal.
-```Javascript
-var servo = obniz.wired("ServoMotor", {signal:0});
+```Python
+servo = obniz.wired("ServoMotor", {"signal": 2})
 ```
+
 
 Or you can use pwm object.
 
-```Javascript
-var pwm = obniz.getFreePwm();
-pwm.start({io:0})
-var servo = obniz.wired("ServoMotor", {pwm:pwm});
+```Python
+pwm = obniz.get_free_pwm()
+servo = obniz.wired("ServoMotor", {"pwm": pwm})
 ```
 
 ## angle(degree)
 Change the motor angle.
 angle : 0 - 180 degree
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 
-servo.angle(90.0); // half position
+servo.angle(90.0) # half position
 ```
 
 ## range = {min, max}
@@ -84,38 +84,38 @@ servo.angle(90.0); // half position
 Adjusting output pulse length.
 By default 0.5 to 2.4 msec pulse will be generated regarding angle 0 to 180 degree.
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 servo.range = {
-  min: 0.8,
-  max: 2.4
+  "min": 0.8,
+  "max": 2.4
 }
-servo.angle(90.0); // half position
+servo.angle(90.0) # half position
 ```
 
-## on();
+## on()
 Turn on the power.
 When you call wired function, it automatically turn on.
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 
-servo.angle(90.0); // half position
-servo.off();
-servo.on();
+servo.angle(90.0) # half position
+servo.off()
+servo.on()
 ```
 
-## off();
+## off()
 Turn off the power.
 When you call wired function, it automatically turn on.
 
-```Javascript
-// Javascript Example
-var servo = obniz.wired("ServoMotor", {signal:0,vcc:1, gnd:2});
+```Python
+# Python Example
+servo = obniz.wired("ServoMotor", {"signal": 0, "vcc": 1, "gnd": 2})
 
-servo.angle(90.0); // half position
-servo.off();
-servo.on();
+servo.angle(90.0) # half position
+servo.off()
+servo.on()
 ```

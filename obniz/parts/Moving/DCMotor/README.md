@@ -9,34 +9,31 @@ Common Brushed DC Motor which moves when connected to +/- and reverse when conne
 connect two wire to an obniz and set io number to forward,back.
 If you connect to io 0 and 1, then write a program like a below.
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor",  {forward:0, back:1});
-motor.power(50);
-motor.forward();
-
+```Python
+# Python Example
+motor = obniz.wired("DCMotor",  {"forward": 0, "back": 1})
+motor.power(50)
+motor.forward()
 ```
 ## forward()
 
 start moving forward.
 
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
-
-motor.forward();
+motor.forward()
 ```
 ## reverse()
 
 start moving to back.
 
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
-
-motor.reverse();
+motor.reverse()
 ```
 
 ## stop()
@@ -44,25 +41,24 @@ motor.reverse();
 stop a motor.
 
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.forward();
-setTimeout(function(){
-  motor.stop();
-}, 1000);
+motor.forward()
+await obniz.wait(1000)
+motor.stop()
 ```
-## move(boolean)
+## move(bool)
 
 move a motor regard provided value.
 
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.move(true); // = motor.forward();
+motor.move(True) # = motor.forward()
 ```
 ## power(float)
 set a motor power.
@@ -71,10 +67,9 @@ default is 30.
 
 power must be within 0~100.
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.power(80);
-motor.move(true);
+motor.move(True) # = motor.forward()
 ```

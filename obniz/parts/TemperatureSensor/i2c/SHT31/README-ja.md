@@ -9,20 +9,26 @@ Obnizに温度センサをつなぎます。
 5はI2Cアドレスです。アドレスを0x44にする場合は4,0x45にする場合は5を入力してください。
 ADDRピンをプルアップしている場合は0x45,プルダウンしている場合は0x44です。
 秋月電子のモジュールキット(K-12125)を使用している場合のデフォルトは0x45です。
-```javascript
-// Javascript Example
-var sensor = obniz.wired("SHT31", {vcc : 0, sda:1, scl:2, adr:3, gnd:4, addressmode:5});
+```Python
+# Python Example
+sensor = obniz.wired(
+    "SHT31",
+    {"vcc": 0, "sda": 1, "scl": 2, "adr": 3, "gnd" :4, "addressmode": 5}
+)
 ```
-## [await] getTempWait()
+## [await] get_temp_wait()
 現在の温度を計測して返します。単位は摂氏(°C)です。
 
-## [await] getHumdWait()
+## [await] get_humd_wait()
 現在の湿度を計測して返します。単位は%です。
-```javascript
-// Javascript Example
-var sensor = obniz.wired("SHT31", {vcc : 0, sda:1, scl:2, adr:3, gnd:4, addressmode:5});
-var temp = await sensor.getTempWait();
-var humd = await sensor.getHumdWait();
-console.log('temperature:' + temp);
-console.log('humidity:' + humd);
+```Python
+# Python Example
+sensor = obniz.wired(
+    "SHT31",
+    {"vcc": 0, "sda": 1, "scl": 2, "adr": 3, "gnd" :4, "addressmode": 5}
+)
+temp = await sensor.get_temp_wait()
+humd = await sensor.get_humd_wait()
+print('temperature:', temp)
+print('humidity:', humd)
 ```

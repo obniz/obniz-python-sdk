@@ -7,46 +7,50 @@
 
 ![photo of wired](./wired.png)
 
-```Javascript
-// Javascript Example
-var button = obniz.wired("Button",  {signal:0, gnd:1});
+```Python
+# Python Example
+button = obniz.wired("Button",  {"signal": 0, "gnd": 1})
 ```
 
 gndはオプショナルです。他のGNDに繋いだ場合は、指定しなくても大丈夫です。
 
-```Javascript
-// Javascript Example
-var button = obniz.wired("Button",  {signal:0});
+```Python
+# Python Example
+button = obniz.wired("Button",  {"signal":0})
 ```
 
-## onchange = function(pressed){}
+## onchange = function(pressed)
 ボタンが押された時、離された時にcallback関数を呼び出します。
 
-```Javascript
-// Javascript Example
-var button = obniz.wired("Button",  {signal:0, gnd:1});
-button.onchange = function(pressed){
-  console.log("pressed:" + pressed)
-};
+```Python
+# Python Example
+button = obniz.wired("Button",  {"signal": 0, "gnd": 1})
+
+def onchange(pressed):
+    print("pressed:", pressed)
+
+button.onchange = onchange
 ```
 
-## [await] isPressedWait()
+## [await] is_pressed_wait()
 ボタンが押されているかを確認します。
-```Javascript
-// Javascript Example
-var button = obniz.wired("Button",  {signal:0, gnd:1});
-var pressed = await button.isPressedWait();
-console.log("Pressed = " + pressed);
+```Python
+# Python Example
+button = obniz.wired("Button",  {"signal": 0, "gnd": 1})
+
+pressed = await button.is_pressed_wait()
+print("pressed:", pressed)
 ```
 
 
-## [await] stateWait()
+## [await] state_wait()
 ボタンが押される／離されるまで待ちます
-```Javascript
-// Javascript Example
-var button = obniz.wired("Button",  {signal:0, gnd:1});
-await button.stateWait(true); 
-console.log("button pushed!");
-await button.stateWait(false); 
-console.log("button released");
+```Python
+# Python Example
+button = obniz.wired("Button",  {"signal": 0, "gnd": 1})
+
+await button.state_wait(True) 
+print("button pushed!")
+await button.state_wait(False) 
+print("button released")
 ```

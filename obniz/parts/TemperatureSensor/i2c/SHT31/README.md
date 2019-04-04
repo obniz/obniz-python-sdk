@@ -7,20 +7,26 @@ Temperature and Humidity sensor SHT31
 the address of SHT31 can be choosed from 0x44,0x45.
 Please provide 4 for 0x44. 5 for 0x45 to addressmode.
 (SHT31 read ADDR value to define it's address. 0 is 0x45.)
-```javascript
-// Javascript Example
-var sensor = obniz.wired("SHT31", {vcc : 0, sda:1, scl:2, adr:3, gnd:4, addressmode:5});
+```Python
+# Python Example
+sensor = obniz.wired(
+    "SHT31",
+    {"vcc": 0, "sda": 1, "scl": 2, "adr": 3, "gnd" :4, "addressmode": 5}
+)
 ```
-## [await] getTempWait()
+## [await] get_temp_wait()
 Get a temperature. Unit is Celsius.
 
-## [await] getHumdWait()
+## [await] get_humd_wait()
 Get a Humidity. Unit is Ratio(%).
-```javascript
-// Javascript Example
-var sensor = obniz.wired("SHT31", {vcc : 0, sda:1, scl:2, adr:3, gnd:4, addressmode:5});
-var temp = await sensor.getTempWait();
-var humd = await sensor.getHumdWait();
-console.log('temperature:' + temp);
-console.log('humidity:' + humd);
+```Python
+# Python Example
+sensor = obniz.wired(
+    "SHT31",
+    {"vcc": 0, "sda": 1, "scl": 2, "adr": 3, "gnd" :4, "addressmode": 5}
+)
+temp = await sensor.get_temp_wait()
+humd = await sensor.get_humd_wait()
+print('temperature:', temp)
+print('humidity:', humd)
 ```

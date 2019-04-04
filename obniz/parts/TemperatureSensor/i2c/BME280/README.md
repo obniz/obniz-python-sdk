@@ -29,65 +29,73 @@ address | `number` | no | 0x76  | 0x76 or 0x77
 
 This library use I2C to communicate.
 
-```javascript
-// Javascript Example
-// Please pullup sdi and sck.
-var bme280 = obniz.wired("BME280", {vio:0, vcore:1, gnd:2, csb:3, sdi: 4, sck: 5, sdo:6 });
-await bme280.applyCalibration();
-const val = await bme280.getAllWait();
-console.log(val);
+```Python
+# Python Example
+# Please pullup sdi and sck.
+bme280 = obniz.wired(
+    "BME280",
+    {"vio": 0, "vcore": 1, "gnd": 2, "csb" 3, "sdi": 4, "sck": 5, "sdo":6}
+)
+await bme280.apply_calibration()
+val = await bme280.get_all_wait()
+print(val)
 ```
 
 vio and vcore can be connected.
 csb can be connected to high simply, and sdo can be connected to low.
 So, minimum connection and configration is.
 
+```Python
+# Python Example
 
-```javascript
-// Javascript Example
+# vcore connected to vio
+# csb connected to vio
+# sdo connected to gnd
 
-// vcore connected to vio
-// csb connected to vio
-// sdo connected to gnd
-
-var bme280 = obniz.wired("BME280", {vio:0, gnd:1, sdi: 2, sck: 3 });
-await bme280.applyCalibration();
-const val = await bme280.getAllWait();
-console.log(val);
+bme280 = obniz.wired("BME280", {"vio": 0, "gnd": 1, "sdi": 2, "sck": 3})
+await bme280.apply_calibration()
+val = await bme280.get_all_wait()
+print(val)
 ```
 
 Or you can use i2c object
 
-```javascript
-// Javascript Example
+```Python
+# Python Example
 
-var i2c = obniz.getFreeI2C();
-i2c.start({mode:"master", sda:2, scl:3, clock:100000}); 
+i2c = obniz.get_free_i2c()
+i2c.start({"mode": "master", "sda": 2, "scl": 3, "clock" 100000}) 
 
-var bme280 = obniz.wired("BME280", {vio:0, gnd:1, i2c: i2c });
+bme280 = obniz.wired("BME280", {"vio": 0, "gnd": 1, "i2c": i2c})
 ```
 
 If you configured a chip to use address 0x77 (by pull-up sdo)
 
-```javascript
-// Javascript Example
+```Python
+# Python Example
 
-var bme280 = obniz.wired("BME280", {vio:0, gnd:1, sdi: 2, sck: 3, address: 0x77});
+bme280 = obniz.wired(
+    "BME280",
+    {"vio": 0, "gnd": 1, "sdi": 2, "sck": 3, "address": 0x77}
+)
 ```
 
-## [await] applyCalibration()
+## [await] apply_calibration()
 
 Retrive factory stored calibration data from connected chip.
 You can use BME280 without calling this, But You should do for better accuracy.
 
-```javascript
-// Javascript Example
-// Please pullup sdi and sck.
-var bme280 = obniz.wired("BME280", {vio:0, vcore:1, gnd:2, csb:3, sdi: 4, sck: 5, sdo:6 });
-await bme280.applyCalibration();
+```Python
+# Python Example
+# Please pullup sdi and sck.
+bme280 = obniz.wired(
+    "BME280",
+    {"vio": 0, "vcore": 1, "gnd": 2, "csb" 3, "sdi": 4, "sck": 5, "sdo":6}
+)
+await bme280.apply_calibration()
 ```
 
-## [await] setIIRStrength()
+## [await] set_iir_strength()
 
 configure of internal IIR filter. 0 to 4.
 
@@ -97,15 +105,18 @@ IIR filter makes more stable and accurate result.
 But you should wait for get more accurate result.
 
 
-```javascript
-// Javascript Example
-// Please pullup sdi and sck.
-var bme280 = obniz.wired("BME280", {vio:0, vcore:1, gnd:2, csb:3, sdi: 4, sck: 5, sdo:6 });
-await bme280.applyCalibration();
-await bme280.setIIRStrength(1); // start using minimum IIR 
+```Python
+# Python Example
+# Please pullup sdi and sck.
+bme280 = obniz.wired(
+    "BME280",
+    {"vio": 0, "vcore": 1, "gnd": 2, "csb" 3, "sdi": 4, "sck": 5, "sdo":6}
+)
+await bme280.apply_calibration()
+await bme280.set_iir_strength(1) # start using minimum IIR 
 ```
 
-## [await] getAllWait()
+## [await] get_all_wait()
 
 get all values.
 
@@ -113,29 +124,35 @@ get all values.
 - humidity: %
 - pressure: hPa
 
-```javascript
-// Javascript Example
-// Please pullup sdi and sck.
-var bme280 = obniz.wired("BME280", {vio:0, vcore:1, gnd:2, csb:3, sdi: 4, sck: 5, sdo:6 });
-await bme280.applyCalibration();
-const obj = await bme280.getAllWait();
-console.log('temp: ' + obj.temperature + ' degree');
-console.log('humidity: ' + obj.humidity + ' %');
-console.log('pressure: ' + obj.pressure + ' hPa');
+```Python
+# Python Example
+# Please pullup sdi and sck.
+bme280 = obniz.wired(
+    "BME280",
+    {"vio": 0, "vcore": 1, "gnd": 2, "csb" 3, "sdi": 4, "sck": 5, "sdo":6}
+)
+await bme280.apply_calibration()
+obj = await bme280.get_all_wait()
+print('temp:', obj.temperature, 'degree')
+print('humidity:', obj.humidity, '%')
+print('pressure:', obj.pressure, 'hPa')
 ```
 
-## calcAltitude(pressure, seaPressure)
+## calc_altitude(pressure, sea_pressure)
 
 Utility function for calcurate accuracy using air pressure.
 Unit is m.
 
-```javascript
-// Javascript Example
-// Please pullup sdi and sck.
-var bme280 = obniz.wired("BME280", {vio:0, vcore:1, gnd:2, csb:3, sdi: 4, sck: 5, sdo:6 });
-await bme280.applyCalibration();
-const obj = await bme280.getAllWait();
-const airPressure = obj.pressure;
-const hight_in_m = bme280.calcAltitude(airPressure);
-console.log('altitude: ' + hight_in_m + ' m');
+```Python
+# Python Example
+# Please pullup sdi and sck.
+bme280 = obniz.wired(
+    "BME280",
+    {"vio": 0, "vcore": 1, "gnd": 2, "csb" 3, "sdi": 4, "sck": 5, "sdo":6}
+)
+await bme280.apply_calibration()
+obj = await bme280.get_all_wait()
+air_pressure = obj.pressure
+hight_in_m = bme280.calc_altitude(air_pressure)
+print('altitude:', hight_in_m, 'm')
 ```

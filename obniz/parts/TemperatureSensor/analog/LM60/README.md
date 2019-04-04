@@ -9,32 +9,32 @@ Temperature sensor LM60BIZ/LM60CIM
 
 
 ## wired(obniz, {vcc, gnd, output})
-```javascript
-// Javascript Example
-var tempsens = obniz.wired("LM60", { gnd:0 , output:1, vcc:2});
+```Python
+# Python Example
+tempsens = obniz.wired("LM60",  {"gnd": 0 , "output": 1, "vcc" 2})
 ```
 
 ## onchange
 callback function for temperature change.
 Unit of temp is Celsius
 
-```javascript
-// Javascript Example
-var tempsens = obniz.wired("LM60",   { gnd:0 , output:1, vcc:2});
-tempsens.onchange = function(temp){
-console.log(temp)
-};
+```Python
+# Python Example
+tempsens = obniz.wired("LM60",  {"gnd": 0 , "output": 1, "vcc" 2})
+
+def print_temp(temp):
+    print(temp)
+tempsens.onchange = print_temp
 ```
 
-## [await]getWait
+## [await]get_wait
 get temperature change.
 Unit of temp is Celsius
 
-```javascript
-// Javascript Example
-var tempsens = obniz.wired("LM60",   { gnd:0 , output:1, vcc:2});
-var temp = await tempsens.getWait();
-console.log(temp);
-```
- 
+```Python
+# Python Example
+tempsens = obniz.wired("LM60",  {"gnd": 0 , "output": 1, "vcc" 2})
 
+temp = await tempsens.get_wait()
+print(temp)
+```

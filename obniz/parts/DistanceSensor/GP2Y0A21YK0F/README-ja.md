@@ -9,38 +9,38 @@
 ![photo of wired](./image.jpg)
 
 ![photo of wired](./wired.png)
-```javascript
-// Javascript Example
-var sensor = obniz.wired("GP2Y0A21YK0F", {vcc:0, gnd:1, signal:2})
-sensor.start(function( distance ){
-  console.log("distance " + distance + " mm")
-})
+```Python
+# Python Example
+sensor = obniz.wired("GP2Y0A21YK0F", {"vcc": 0, "gnd": 1, "signal": 2})
+def print_distance(distance):
+    print("distance:", distance, "mm")
+sensor.start(print_distance)
 ```
 
 ## start(callback(distance))
 距離を継続的に計測します。距離に変化があれば関数が呼ばれます。
 単位は"mm"でunit()関数で他のものに変更できます。
-```javascript
-// Javascript Example
-var sensor = obniz.wired("GP2Y0A21YK0F", {vcc:0, gnd:1, signal:2})
-sensor.start(function( distance ){
-  console.log("distance " + distance + " mm")
+```Python
+# Python Example
+sensor = obniz.wired("GP2Y0A21YK0F", {"vcc": 0, "gnd": 1, "signal": 2})
+
+def print_distance(distance):
+    print("distance:", distance, "mm")
+sensor.start(print_distance)
 })
 ```
 
-## [await] getWait()
+## [await] get_wait()
 一度だけ距離を測定します
 
-```javascript
-// Javascript Example
-var sensor = obniz.wired("GP2Y0A21YK0F", {vcc:0, gnd:1, signal:2})
+```Python
+# Python Example
+sensor = obniz.wired("GP2Y0A21YK0F", {"vcc": 0, "gnd": 1, "signal": 2})
 
-while (1) {
-  var val = await sensor.getWait();
-  console.log("distance " + val);
-  await obniz.wait(1000);
-}
-    
+while True:
+    val = await sensor.get_wait()
+    print("distance", val)
+    await obniz.wait(1000)
 ```
     
     
@@ -53,11 +53,12 @@ while (1) {
 
 が利用できます。
 
-```javascript
-// Javascript Example
-var sensor = obniz.wired("GP2Y0A21YK0F", {vcc:0, gnd:1, signal:2})
+```Python
+# Python Example
+sensor = obniz.wired("GP2Y0A21YK0F", {"vcc": 0, "gnd": 1, "signal": 2})
+
 sensor.unit("inch")
-sensor.start(function( distance ){
-  console.log("distance " + distance + " inch")
-})
+def print_distance(distance):
+    print("distance:", distance, "mm")
+sensor.start(print_distance)
 ```

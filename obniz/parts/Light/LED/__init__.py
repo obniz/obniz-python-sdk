@@ -41,8 +41,6 @@ class LED:
     def end_blink(self):
         self.obniz.io.animation(*[self.animation_name, 'pause'])
 
-    def blink(self, interval):
-        if not interval:
-            interval = 100
+    def blink(self, interval=100):
         frames = [AttrDefault(bool, {'duration': interval, 'state': lambda index: self.io_anode.output(*[True])}), AttrDefault(bool, {'duration': interval, 'state': lambda index: self.io_anode.output(*[False])})]
         self.obniz.io.animation(*[self.animation_name, 'loop', frames])

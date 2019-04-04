@@ -5,58 +5,55 @@
 
 ## wire({forward, back})
 モーターから出ている２本の線をObnizにつなぎます。どちらをどこにつないでもOKですが、プログラムで「前」と書いて後ろに動いたらあとで配線を逆にすると良いです。モーターをObnizの0と1番に繋いだ場合は以下のようにします
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor",  {forward:0, back:1});
-
+```Python
+# Python Example
+motor = obniz.wired("DCMotor",  {"forward": 0, "back": 1})
 ```
-## forward();
+## forward()
 モーターを回転させます。
 
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.forward();
+motor.forward()
 ```
-## reverse();
+## reverse()
 モーターを逆に回転させます。
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.reverse();
+motor.reverse()
 ```
-## stop();
+## stop()
 モーターを停止させます。
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.forward();
-setTimeout(function(){
-  motor.stop();
-}, 1000);
+motor.forward()
+await obniz.wait(1000)
+motor.stop()
 ```
-## move(boolean)
+## move(bool)
 directionに合わせて指定した方向にモーターを回転させます。rotateとreverseを引数を変えるだけでこの関数１つで扱えます。trueであれば正転。falseであれば逆に回転します。
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.move(true); // = motor.forward();
+motor.move(True) # = motor.forward()
 ```
 ## power(float)
 モーターのパワーを変更します。0~100で指定することが出来ます。
 
-```javascript
-// Javascript Example
-var motor = obniz.wired("DCMotor", {forward:0, back:1});
+```Python
+# Python Example
+motor = obniz.wired("DCMotor", {"forward": 0, "back": 1})
 
-motor.power(3);
-motor.move(true);
+motor.move(True) # = motor.forward()
 ```
