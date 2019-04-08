@@ -133,9 +133,9 @@ bme280 = obniz.wired(
 )
 await bme280.apply_calibration()
 obj = await bme280.get_all_wait()
-print('temp:', obj.temperature, 'degree')
-print('humidity:', obj.humidity, '%')
-print('pressure:', obj.pressure, 'hPa')
+print('temp:', obj["temperature"], 'degree')
+print('humidity:', obj["humidity"], '%')
+print('pressure:', obj["pressure"], 'hPa')
 ```
 
 ## calc_altitude(pressure, sea_pressure)
