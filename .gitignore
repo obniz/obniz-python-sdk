@@ -3,3 +3,6 @@
 /obniz.egg-info/
 /.tox/
 __pycache__/
+.DS_Store
+.pytest_cache/
+.vscode/
