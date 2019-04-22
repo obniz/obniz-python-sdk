@@ -322,7 +322,7 @@ class ObnizConnection:
 
     def send(self, obj, options=None):
         if obj is None:
-            print("obnizpy didnt send ", obj)
+            print("obnizpy. didnt send ", obj)
             return
 
         if type(obj) is list:
