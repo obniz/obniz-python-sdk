@@ -66,7 +66,7 @@ class PeripheralIO:
         return self.value
 
     def input_wait(self):
-        future = asyncio.Future()
+        future = asyncio.get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["io" + str(self.id)] = {"direction": "input", "stream": False}

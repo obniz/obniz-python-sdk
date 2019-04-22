@@ -14,6 +14,7 @@ from .obniz_connection import ObnizConnection
 from .obniz_parts import ObnizParts
 
 import attrdict
+import asyncio
 
 
 class ObnizComponents(ObnizParts):
@@ -110,17 +111,26 @@ class ObnizComponents(ObnizParts):
     #       }
     #     }
     #   }
+    def handle_system_command(self, ws_obj):
+        super().handle_system_command(ws_obj)
+        # ping pong
+        if ws_obj["pong"]:
+            for tpl in self.pong_observers:
+                future, callback = tpl
+                ret = callback(ws_obj)
+                if ret:
+                    future.set_result(ret)
 
-    def add_pong_observer(self, callback):
-        if callback:
-            self.pong_observers.append(callback)
+    def add_pong_observer(self, future, callback):
+        if asyncio.isfuture(future) and callable(callback):
+            future.add_done_callback(self.remove_pong_observer)
+            self.pong_observers.append((future, callback))
 
-    #   removePongObserver(callback) {
-    #     if (self.pongObservers.includes(callback)) {
-    #       index = self.pongObservers.indexOf(callback)
-    #       self.pongObservers.splice(index, 1)
-    #     }
-    #   }
+    def remove_pong_observer(self, future):
+        for i, tpl in enumerate(self.pong_observers):
+            ftr, clb = tpl
+            if ftr == future:
+                self.pong_observers.remove(i)
 
     def is_valid_io(self, io):
         return type(io) is int and io >= 0 and io < 12

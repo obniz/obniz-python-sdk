@@ -572,7 +572,7 @@ class TestBle:
         def callback(data):
             assert data == [1, 2, 3]
 
-        characteristic.read_wait(callback)
+        characteristic.read_wait().add_done_callback(callback)
 
         assert_send(
             obniz,
@@ -662,7 +662,7 @@ class TestBle:
         def callback(data):
             assert data == [115, 97, 109, 112, 108, 101]
 
-        descriptor.read_wait(callback)
+        descriptor.read_wait().add_done_callback(callback)
 
         assert_send(
             obniz,

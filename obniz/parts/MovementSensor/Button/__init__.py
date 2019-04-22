@@ -33,7 +33,8 @@ class Button:
         return ret == False
 
     def state_wait(self, is_pressed):
-        future = asyncio.Future()
+        # get_running_loop() function is preferred on Python >= 3.7
+        future = asyncio.get_event_loop().create_future()
         def onpress(pressed):
             def nothing(*args):
                 pass

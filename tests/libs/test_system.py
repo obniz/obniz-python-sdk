@@ -6,10 +6,8 @@ class TestSystem:
         unixtime = 1522840296917
         rand = 4553670
 
-        def callback():
-            pass
 
-        obniz.ping_wait(unixtime, rand, callback)
+        obniz.ping_wait(unixtime, rand)
         assert_send(
             obniz,
             [
@@ -33,8 +31,7 @@ class TestSystem:
             nonlocal resolved
             resolved = True
 
-        obniz.ping_wait(unixtime, rand, callback)
-
+        obniz.ping_wait(unixtime, rand).add_done_callback(callback)
         assert_send(
             obniz,
             [

@@ -1,4 +1,5 @@
 from pyee import EventEmitter
+import asyncio
 
 from .ble_helper import BleHelper
 from ...utils.util import ObnizUtil
@@ -117,16 +118,17 @@ class BleAttributeAbstract:
     #     self.write(ObnizUtil.string2dataArray(str), needResponse)
     # }
 
-    def read_wait(self, callback):
+    def read_wait(self):
+        # get_running_loop() function is preferred on Python >= 3.7
+        future = asyncio.get_event_loop().create_future()
         def cb(params):
             if params["result"] == "success":
-                callback(params["data"])
+                future.set_result(params["data"])
             else:
-                callback(None)
-
+                future.set_result(None)
         self.emitter.once("onread", cb)
-
         self.read()
+        return future
 
     # writeWait(data, needResponse) {
     #     return new Promise(resolve => {

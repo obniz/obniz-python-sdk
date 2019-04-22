@@ -146,7 +146,7 @@ class PeripheralI2C:
         if length > 1024:
             raise Exception("i2c: data length should be under 1024 bytes")
 
-        future = asyncio.Future()
+        future = asyncio.get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["i2c" + str(self.id)] = {"address": address, "read": length}

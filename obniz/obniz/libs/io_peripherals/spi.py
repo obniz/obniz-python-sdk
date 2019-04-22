@@ -104,7 +104,7 @@ class PeripheralSPI:
                 + ". Please update obniz firmware"
             )
 
-        future = asyncio.Future()
+        future = asyncio.get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["spi" + str(self.id)] = {"data": data, "read": True}

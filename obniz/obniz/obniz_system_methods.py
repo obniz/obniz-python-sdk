@@ -35,7 +35,7 @@ class ObnizSystemMethods(ObnizComponents):
     def reset_on_disconnect(self, reset):
         self.send({"ws": {"reset_obniz_on_ws_disconnection": reset}})
 
-    def ping_wait(self, unixtime, rand, callback, force_global_network=None):
+    def ping_wait(self, unixtime, rand, force_global_network=None):
         unixtime = unixtime or time()
         upper = int(unixtime / math.pow(2, 32))
         lower = unixtime - upper * int(math.pow(2, 32))
@@ -58,13 +58,14 @@ class ObnizSystemMethods(ObnizComponents):
         obj = {"system": {"ping": {"key": buf}}}
 
         self.send(obj, {"local_connect": not force_global_network})
-
+        # get_running_loop() function is preferred on Python >= 3.7
+        future = asyncio.get_event_loop().create_future()
         def cb(system_obj):
             for i, b in enumerate(buf):
                 if b != system_obj["pong"]["key"][i]:
                     return
 
-            self.removePongObserver(callback)
+            # self.remove_pong_observer(cb)
             upper = (
                 ((system_obj["pong"]["key"][0] << (8 * 3)) >> 0)
                 + ((system_obj["pong"]["key"][1] << (8 * 2)) >> 0)
@@ -92,11 +93,14 @@ class ObnizSystemMethods(ObnizComponents):
             time_server2js = (
                 obniz_js_pong_unixtime - system_obj["pong"]["pongServerTime"]
             )
-            string = "ping " + all_time + "ms (js --[" + time_js2server + "ms]--> "
-            +"server --[" + time_server2obniz + "}ms]--> obniz --[" + time_obniz2server + "}ms]--> "
-            +"server --[" + time_server2js + "}ms]--> js)"
+            string = (
+                "ping " + str(all_time) + "ms (js --[" + str(time_js2server) + "ms]--> "
+                + "server --[" + str(time_server2obniz) + "}ms]--> obniz --[" + str(time_obniz2server) + "}ms]--> "
+                + "server --[" + str(time_server2js) + "}ms]--> js)"
+            )
 
             self.print_debug(string)
-            callback(string)
+            return string
 
-        self.add_pong_observer(cb)
+        self.add_pong_observer(future, cb)
+        return future
