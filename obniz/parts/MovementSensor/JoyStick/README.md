@@ -27,15 +27,15 @@ But another one has a pinassign like
 ![photo of wired](./wired.png)
 
 
-```Javascript
+```Python
 
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
 
-// or
+# or
 
-var joystick = obniz.wired("JoyStick", {gnd:0, sw:1, y:2, x:3, vcc:4});
+joystick = obniz.wired("JoyStick", {"gnd": 0, "sw": 1, "y": 2, "x": 3, "vcc": 4})
 
-// and mores
+# and mores
 ```
 
 ## onchangex = callback(angle)
@@ -44,57 +44,56 @@ callback for on change angle.
 
 angle = -1 to 1
 
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-joystick.onchangex = function(val){
-  console.log(val);
-};
-
-joystick.onchangey = function(val){
-  console.log(val);
-};
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+def onchangex(val):
+    print(val)
+joystick.onchangex = onchangex
+def onchangey(val):
+    print(val)
+joystick.onchangey = onchangey
 ```
 
 ## onchangesw = function(pressed)
 
 It's called when button pressed/released.
 
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-joystick.onchangesw = function(pressed){
-  console.log(pressed);
-};
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+def onchangesw(pressed):
+    print(pressed)
+joystick.onchangesw = onchangesw
 ```
 
 
-## [await] isPressedWait()
+
+## [await] is_pressed_wait()
 
 Get button state once. 
 
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-var isPressed = await joystick.isPressedWait()
-if(isPressed){
-  console.log("PRESSED");
-}
-
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+is_pressed = await joystick.is_pressed_wait()
+if is_pressed:
+    print("PRESSED")
+    
 ```
 
 
-## [await] getXWait()
-## [await] getYWait()
+## [await] get_x_wait()
+## [await] get_y_wait()
 
 Get X or Y angle once
 
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-var x = await joystick.getXWait()
-var y = await joystick.getYWait()
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+x = await joystick.get_x_wait()
+y = await joystick.get_y_wait()
  
-console.log("x:" + x + " y:"+y);
+print("x:", x, "y:", y)
 
 ```

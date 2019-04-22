@@ -62,12 +62,12 @@ led = obniz.wired("LED", {"anode": 0, "cathode": 1})
 led.blink() # 100msec
 ```
 
-## endBlink()
+## end_blink()
 Stop blinking.
 LED stops last state.
 ```Python
 # Python Example
 led = obniz.wired("LED", {"anode": 0, "cathode": 1})
 led.blink()
-led.endBllink()
+led.end_bllink()
 ```

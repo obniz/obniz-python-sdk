@@ -6,28 +6,28 @@ Obnizに圧力センサをつなぎます。
 pin0,pin1を圧力センサへ接続してください。
 
 ![](./wired.png)
-```javascript
-// Javascript Example
-var pressure = obniz.wired("FSR40X", {pin0:0, pin1:1});
+```Python
+# Python Example
+pressure = obniz.wired("FSR40X", {"pin0" 0, "pin1": 1})
 ```
 
-## onchange = function(temp){}
+## onchange = callback(press)
 圧力センサの値に変化があった場合にcallback関数を呼び出します。
 
-```javascript
-// Javascript Example
-var pressure = obniz.wired("FSR40X", {pin0:0, pin1:1});
-pressure.onchange =function(press){
-  console.log(press)
-}
+```Python
+# Python Example
+pressure = obniz.wired("FSR40X", {"pin0" 0, "pin1": 1})
+def onchange(press):
+    print(press)
+pressure.onchange = onchange
 ```
 
-## [await]getWait();
+## [await]get_wait()
 圧力センサの値を一度だけ取得します
 
-```javascript
-// Javascript Example
-var pressure = obniz.wired("FSR40X", {pin0:0, pin1:1});
-var press = await pressure.getWait();
-console.log(press)
+```Python
+# Python Example
+pressure = obniz.wired("FSR40X", {"pin0" 0, "pin1": 1})
+press = await pressure.get_wait()
+print(press)
 ```

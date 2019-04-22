@@ -20,42 +20,44 @@ gnd | `number(obniz io)` | &nbsp; | &nbsp; | Power supply. gnd
 self_test | `number(obniz io)` | &nbsp; | &nbsp; | high for enter test mode
 enable | `number(obniz io)` | &nbsp; | &nbsp; | low for disable device.
 
-```javascript
+```Python
 
-// Javascript Example
-var sensor = obniz.wired("KXR94-2050", { vcc:0, gnd:1, x:2, y:3, z:4, enable:5, self_test:6 });
-
-sensor.onChange = function(values){
-  console.log("x:" + values.x);
-  console.log("y:" + values.y);
-  console.log("z:" + values.z);
-}
+# Python Example
+sensor = obniz.wired("KXR94-2050", {
+    "vcc": 0, "gnd": 1, "x": 2, "y": 3, "z": 4, "enable": 5, "self_test": 6
+})
+def on_change(values):
+      print("x:", values.x)
+      print("y:", values.y)
+      print("z:", values.z)    
+sensor.on_change = on_change
    
 ```
 
-## onChange = function({x: y: z:})
+## on_change = function({x: y: z:})
 
-Specifying a callback function for one of value changes of x,y,z.
+Specifying a callback function for one of value changes of x,y,z.
 The value is regarding gravity. 1 measn 9.8m^2. The value will be -2<= and <= +2.
 
-```javascript
+```Python
 
-// Javascript Example
-var sensor = obniz.wired("KXR94-2050", { vcc:0, gnd:1, x:2, y:3, z:4, enable:5, self_test:6 });
-
-sensor.onChange = function(values){
-  console.log("x:" + values.x);
-  console.log("y:" + values.y);
-  console.log("z:" + values.z);
-}
+# Python Example
+sensor = obniz.wired("KXR94-2050", {
+    "vcc": 0, "gnd": 1, "x": 2, "y": 3, "z": 4, "enable": 5, "self_test": 6
+})
+def on_change(values):
+      print("x:", values.x)
+      print("y:", values.y)
+      print("z:", values.z)    
+sensor.on_change = on_change
    
 ```
 
-## onChangeX = function(value)
+## on_change_x = function(value)
 
-## onChangeY = function(value)
+## on_change_y = function(value)
 
-## onChangeZ = function(value)
+## on_change_z = function(value)
 
 Specifying a callback function for value change.
 This is useful when you only want to watch one of them.
@@ -68,33 +70,35 @@ This function not contact to an obniz. It return last notified value from an obn
 Notice: You should insert a wait() in infinity loop.
 
 
-```javascript
-// Javascript Example
-var sensor = obniz.wired("KXR94-2050", { vcc:0, gnd:1, x:2, y:3, z:4, enable:5, self_test:6 });
+```Python
+# Python Example
+sensor = obniz.wired("KXR94-2050", {
+    "vcc": 0, "gnd": 1, "x": 2, "y": 3, "z": 4, "enable": 5, "self_test": 6
+})
   
-while (true) {
-  let values = sensor.get();
-  console.log("x:" + values.x);
-  console.log("y:" + values.y);
-  console.log("z:" + values.z);
-  await obniz.wait(30);
-}
+while True:
+    values = sensor.get()
+    print("x:", values.x)
+    print("y:", values.y)
+    print("z:", values.z)
+    await obniz.wait(30)
 ```
 
 
-## [await] getWait()
+## [await] get_wait()
 
 Getting a current three acceleration value.
 This function will contact to an obniz to retrive current value.
 
-```javascript
-// Javascript Example
-var sensor = obniz.wired("KXR94-2050", { vcc:0, gnd:1, x:2, y:3, z:4, enable:5, self_test:6 });
-  
-while (true) {
-  let values = await sensor.getWait();
-  console.log("x:" + values.x);
-  console.log("y:" + values.y);
-  console.log("z:" + values.z);
-}
+```Python
+# Python Example
+sensor = obniz.wired("KXR94-2050", {
+    "vcc": 0, "gnd": 1, "x": 2, "y": 3, "z": 4, "enable": 5, "self_test": 6
+})
+while True:
+    values = await sensor.get_wait()
+    print("x:", values.x)
+    print("y:", values.y)
+    print("z:", values.z)
+
 ```

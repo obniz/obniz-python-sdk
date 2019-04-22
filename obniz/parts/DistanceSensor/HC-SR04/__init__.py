@@ -11,6 +11,7 @@ class HCSR04:
         self._unit = 'mm'
         self.reset_alltime = False
         self.temp = 15
+        self.onchange = None
 
     @staticmethod
     def info():
@@ -60,11 +61,11 @@ class HCSR04:
             )]
         )
 
-    async def measure_wait(self):
+    def measure_wait(self):
         # get_running_loop() function is preferred on Python >= 3.7
         future = asyncio.get_event_loop().create_future()
         self.measure(future=future)
-        return await future
+        return future
 
     def unit(self, unit):
         if unit == 'mm':

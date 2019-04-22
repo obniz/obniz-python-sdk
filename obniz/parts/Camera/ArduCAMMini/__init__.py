@@ -122,7 +122,7 @@ class ArduCAMMini:
         while True:
             if await self.is_capture_done_wait():
                 break
-        return await self.read_fifowait()
+        return await self.read_fifo_wait()
 
     def set_size(self, string):
         if hasattr(self, "_size") and self._size == string:
@@ -163,7 +163,7 @@ class ArduCAMMini:
         val = await self.spi_read_reg_wait(*[self.regs.ARDUCHIP_TRIG])
         return True if val & CAP_DONE_MASK else False
 
-    async def read_fifowait(self):
+    async def read_fifo_wait(self):
         length = await self.read_fifolength_wait()
         self.io_cs.output(*[False])
         self.spi.write(*[[self.regs.BURST_FIFO_READ]])

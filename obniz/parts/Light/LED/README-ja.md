@@ -59,12 +59,12 @@ LEDを点滅させます。interval_msで指定した場合はその時間で点
 led = obniz.wired("LED", {"anode": 0, "cathode": 1})
 led.blink() # 100msec
 ```
-## endBlink()
+## end_blink()
 LEDの点滅をやめます。LEDは最後の状態で止まります。
 
 ```Python
 # Python Example
 led = obniz.wired("LED", {"anode": 0, "cathode": 1})
 led.blink()
-led.endBllink()
+led.end_bllink()
 ```

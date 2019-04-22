@@ -8,30 +8,30 @@ Pressure sensor. It output pressure as a voltage.
 Connect two pins to an obniz. pin0 and pin1 is obniz io number.
 
 ![](./wired.png)
-```javascript
-// Javascript Example
-var pressure = obniz.wired("FSR40X", {pin0:0, pin1:1});
+```Python
+# Python Example
+pressure = obniz.wired("FSR40X", {"pin0" 0, "pin1": 1})
 ```
 
-## onchange = function(temp)
+## onchange = callback(press)
 
-callbackfunction will called when pressure changed.
+callback function will called when pressure changed.
 
-```javascript
-// Javascript Example
-var pressure = obniz.wired("FSR40X", {pin0:0, pin1:1});
-pressure.onchange =function(press){
-  console.log(press)
-}
+```Python
+# Python Example
+pressure = obniz.wired("FSR40X", {"pin0" 0, "pin1": 1})
+def onchange(press):
+    print(press)
+pressure.onchange = onchange
 ```
 
-## [await]getWait();
+## [await]get_wait();
 
 Get pressure value once.
 
-```javascript
-// Javascript Example
-var pressure = obniz.wired("FSR40X", {pin0:0, pin1:1});
-var press = await pressure.getWait();
-console.log(press)
+```Python
+# Python Example
+pressure = obniz.wired("FSR40X", {"pin0" 0, "pin1": 1})
+press = await pressure.get_wait()
+print(press)
 ```

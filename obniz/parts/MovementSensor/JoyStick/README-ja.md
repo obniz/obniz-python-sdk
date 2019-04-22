@@ -12,7 +12,7 @@ y: y軸のアナログ値出力
 
 ### 注意！いろいろな製品があります！
 ジョイスティックは製品によってピン配置が違うので注意して下さい。
-例えば、obnizでよく使われるのはこのピンアサインのものですが
+例えば、obnizでよく使われるのはこのピンアサインのものですが
 ![](./joystick_pins.jpg)
 
 他にもこのようなピンアサインのものもあります。
@@ -20,67 +20,65 @@ y: y軸のアナログ値出力
 ![photo of wired](./wired.png)
 
 
-```Javascript
+```Python
 
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
 
-// or
+# or
 
-var joystick = obniz.wired("JoyStick", {gnd:0, sw:1, y:2, x:3, vcc:4});
+joystick = obniz.wired("JoyStick", {"gnd": 0, "sw": 1, "y": 2, "x": 3, "vcc": 4})
 
-// and mores
+# and mores
 ```
-## onchangex(callback)
-## onchangey(callback)
+## onchangex = callback(angle)
+## onchangey = callback(angle)
 それぞれX軸，Y軸方向へ動いた場合に呼ばれる関数を指定できます。
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-joystick.onchangex = function(val){
-  console.log(val);
-};
-
-joystick.onchangey = function(val){
-  console.log(val);
-};
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+def onchangex(val):
+    print(val)
+joystick.onchangex = onchangex
+def onchangey(val):
+    print(val)
+joystick.onchangey = onchangey
 ```
 
-## onchangesw(callback)
+## onchangesw = callback(pressed)
 ボタンが押されたり離された時に呼ばれます。
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-joystick.onchangesw = function(pressed){
-  console.log(pressed);
-};
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+def onchangesw(pressed):
+    print(pressed)
+joystick.onchangesw = onchangesw
 ```
 
 
-## [await] isPressedWait()
+## [await] is_pressed_wait()
 ボタンが押されているかどうかを一度だけ取得します
 
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-var isPressed = await joystick.isPressedWait()
-if(isPressed){
-  console.log("PRESSED");
-}
-
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+is_pressed = await joystick.is_pressed_wait()
+if is_pressed:
+    print("PRESSED")
+    
 ```
 
 
-## [await] getXWait()
-## [await] getYWait()
+## [await] get_x_wait()
+## [await] get_y_wait()
 
 X,Yそれぞれの傾きを一度だけ取得します
 
-```Javascript
-// Javascript Example
-var joystick = obniz.wired("JoyStick", {gnd:4, sw:0, y:1, x:2, vcc:3});
-var x = await joystick.getXWait()
-var y = await joystick.getYWait()
+```Python
+# Python Example
+joystick = obniz.wired("JoyStick", {"gnd": 4, "sw": 0, "y": 1, "x" 2, "vcc": 3})
+x = await joystick.get_x_wait()
+y = await joystick.get_y_wait()
  
-console.log("x:" + x + " y:"+y);
+print("x:", x, "y:", y)
 
 ```
