@@ -1,4 +1,4 @@
-from pyee import EventEmitter
+from pyee import AsyncIOEventEmitter
 
 from .ble_helper import BleHelper
 
@@ -7,7 +7,7 @@ class BleScan:
     def __init__(self, obniz):
         self.scan_target = None
         self.obniz = obniz
-        self.emitter = EventEmitter()
+        self.emitter = AsyncIOEventEmitter()
 
         self.scaned_peripherals = []
 

@@ -1,4 +1,4 @@
-from pyee import EventEmitter
+from pyee import AsyncIOEventEmitter
 import asyncio
 
 from .ble_helper import BleHelper
@@ -27,7 +27,7 @@ class BleAttributeAbstract:
 
         self.set_functions()
 
-        self.emitter = EventEmitter()
+        self.emitter = AsyncIOEventEmitter()
 
     def set_functions(self):
         children_name = self.children_name

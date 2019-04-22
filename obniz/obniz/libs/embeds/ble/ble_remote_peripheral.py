@@ -1,6 +1,6 @@
 import json
 
-from pyee import EventEmitter
+from pyee import AsyncIOEventEmitter
 
 from .ble_helper import BleHelper
 from .ble_remote_service import BleRemoteService
@@ -29,7 +29,7 @@ class BleRemotePeripheral:
         ]
 
         self.services = []
-        self.emitter = EventEmitter()
+        self.emitter = AsyncIOEventEmitter()
 
     def __str__(self):
         return json.dumps(

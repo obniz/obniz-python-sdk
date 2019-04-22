@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from pyee import EventEmitter
+from pyee import AsyncIOEventEmitter
 import websockets
 
 from .__version__ import __version__
@@ -15,7 +15,7 @@ class ObnizConnection:
         self.debugprint = False
         self.debugprint_binary = False
         self.bufferd_amound_warn_bytes = 10 * 1000 * 1000  # 10M bytes
-        self.emitter = EventEmitter()
+        self.emitter = AsyncIOEventEmitter()
 
         self.onopen = None
         self.onconnect = None
