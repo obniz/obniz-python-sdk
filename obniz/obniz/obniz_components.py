@@ -94,7 +94,7 @@ class ObnizComponents(ObnizParts):
                     getattr(self, peripheral + str(i)).notified(module_value)
                 i += 1
 
-        names = ["switch", "ble", "measure"]
+        names = ["io", "switch", "ble", "measure"]
         for name in names:
             if name in obj:
                 getattr(self, name).notified(obj[name])
@@ -130,7 +130,7 @@ class ObnizComponents(ObnizParts):
         for i, tpl in enumerate(self.pong_observers):
             ftr, clb = tpl
             if ftr == future:
-                self.pong_observers.remove(i)
+                self.pong_observers.pop(i)
 
     def is_valid_io(self, io):
         return type(io) is int and io >= 0 and io < 12

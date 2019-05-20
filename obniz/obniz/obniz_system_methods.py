@@ -35,8 +35,8 @@ class ObnizSystemMethods(ObnizComponents):
     def reset_on_disconnect(self, reset):
         self.send({"ws": {"reset_obniz_on_ws_disconnection": reset}})
 
-    def ping_wait(self, unixtime, rand, force_global_network=None):
-        unixtime = unixtime or time()
+    def ping_wait(self, unixtime=None, rand=None, force_global_network=None):
+        unixtime = unixtime or int(time())
         upper = int(unixtime / math.pow(2, 32))
         lower = unixtime - upper * int(math.pow(2, 32))
         rand = rand or math.floor(random() * math.pow(2, 4))
