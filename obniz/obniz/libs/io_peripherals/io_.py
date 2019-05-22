@@ -69,24 +69,3 @@ class PeripheralIO_:  # noqa: N801
             for matched in matched_list:
                 matched["future"].set_result(None)
                 self.observers.remove(matched)
-#     repeatWait(array, repeat) {
-#     if (semver.lt(this.Obniz.firmware_ver, '2.0.0')) {
-#       throw new Error(`Please update obniz firmware >= 2.0.0`);
-#     }
-#     if (typeof repeat !== 'number' || repeat < 1) {
-#       throw new Error('please specify repeat count > 0');
-#     }
-#     if (parseInt(repeat) !== repeat) {
-#       throw new Error('please provide integer number like 1, 2, 3,,,');
-#     }
-
-#     return new Promise((resolve, reject) => {
-#       const name = '_repeatwait' + Date.now() + this._animationIdentifier;
-#       if (++this._animationIdentifier > 1000) {
-#         this._animationIdentifier = 0;
-#       }
-
-#       this.animation(name, 'loop', array, repeat);
-#       this.addObserver(name, resolve, reject);
-#     });
-#   }
