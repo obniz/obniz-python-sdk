@@ -94,7 +94,7 @@ class TestPeripheralSPI:
             assert value == [0x61, 0xF2]
             assert_finished(obniz)
 
-        obniz.spi0.write_wait([0x12, 0x98], callback)
+        obniz.spi0.write_wait([0x12, 0x98])
 
         assert_send(obniz, [{"spi0": {"data": [0x12, 0x98], "read": True}}])
         sleep(0.01)
@@ -124,7 +124,7 @@ class TestPeripheralSPI:
             match="with your obniz 1.0.2. spi max length=32byte but yours 33. "
             + "Please update obniz firmware",
         ):
-            obniz.spi0.write_wait(data, callback)
+            obniz.spi0.write_wait(data)
 
         assert_finished(obniz)
         obniz.firmware_ver = firmver_ver
@@ -149,7 +149,7 @@ class TestPeripheralSPI:
             assert value == data
             assert_finished(obniz)
 
-        obniz.spi0.write_wait(data, callback)
+        obniz.spi0.write_wait(data)
 
         assert_send(obniz, [{"spi0": {"data": data, "read": True}}])
         sleep(0.01)
