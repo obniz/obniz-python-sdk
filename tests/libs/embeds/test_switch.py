@@ -36,7 +36,7 @@ class TestObnizSwitch:
         def callback(result):
             assert result == "left"
 
-        obniz.switch.get_wait(callback)
+        obniz.switch.get_wait().add_done_callback(callback)
 
         assert_obniz(obniz)
         assert_send(obniz, [{"switch": "get"}])
@@ -51,7 +51,7 @@ class TestObnizSwitch:
         def callback(result):
             assert before is False
 
-        obniz.switch.state_wait("push", callback)
+        obniz.switch.state_wait("push").add_done_callback(callback)
 
         assert_obniz(obniz)
         receive_json(obniz, [{"switch": {"state": "left"}}])

@@ -124,7 +124,7 @@ class TestPeripheralI2C:
             assert value == [0x61, 0xF2, 0x1F]
             assert_finished(obniz)
 
-        obniz.i2c0.read_wait(0x50, 3, callback)
+        obniz.i2c0.read_wait(0x50, 3)
 
         assert_send(obniz, [{"i2c0": {"address": 0x50, "read": 3}}])
 

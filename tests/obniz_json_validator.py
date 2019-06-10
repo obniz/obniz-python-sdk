@@ -44,14 +44,14 @@ class ObnizJsonValidator:
                     uri = "./json_schema/index.yml"
 
                 with open(uri) as f:
-                    result = yaml.load(f)
+                    result = yaml.load(f, Loader=yaml.FullLoader)
 
                 if self.cache_remote:
                     self.store[uri] = result
                 return result
 
         with open("./json_schema/" + type + "/index.yml") as f:
-            schema = yaml.load(f)
+            schema = yaml.load(f, Loader=yaml.FullLoader)
 
         Draft4Validator(schema, resolver=Resolver()).validate(json)
 
