@@ -5,6 +5,7 @@ from .ble_peripheral import BlePeripheral
 from .ble_remote_peripheral import BleRemotePeripheral
 from .ble_scan import BleScan
 from .ble_service import BleService
+from .ble_security import BleSecurity
 
 
 class ObnizBLE:
@@ -21,6 +22,7 @@ class ObnizBLE:
 
         self.advertisement = BleAdvertisement(obniz)
         self.scan = BleScan(obniz)
+        self.security = BleSecurity(obniz)
         self._reset()
 
     def _reset(self):
@@ -201,6 +203,10 @@ class ObnizBLE:
                     peripheral.onerror(params)
                     handled = True
 
+            if params.get("function_code") in [35, 36, 37, 38, 39]:
+                self.security.onerror(params)
+                handled = True
+            
             if not handled:
                 self.obniz.error(
                     "ble "
