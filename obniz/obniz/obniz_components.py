@@ -10,6 +10,7 @@ from .libs.io_peripherals.spi import PeripheralSPI
 from .libs.io_peripherals.uart import PeripheralUART
 from .libs.measurements.logicanalyzer import LogicAnalyzer
 from .libs.measurements.measure import ObnizMeasure
+from .libs.hw.index import HW
 from .obniz_connection import ObnizConnection
 from .obniz_parts import ObnizParts
 
@@ -22,6 +23,7 @@ class ObnizComponents(ObnizParts):
         super().__init__(id, options)
 
         self.pong_observers = []
+        self._all_component_keys = []
 
     def close(self):
         super().close()
@@ -29,25 +31,47 @@ class ObnizComponents(ObnizParts):
             self._reset_components()
 
     def _prepare_components(self):
+        hwDefinition = HW.get_definition_for(self.hw)
+        if hwDefinition is None:
+            raise Exception(f"unknown hw {self.hw}")
+        # print(hwDefinition)
+
         setattr(self, "io", PeripheralIO_(self))
 
-        for i in range(0, 12):
-            setattr(self, "io" + str(i), PeripheralIO(self, i))
+        # for i in range(0, 12):
+        #     setattr(self, "io" + str(i), PeripheralIO(self, i))
 
-        for i in range(0, 12):
-            setattr(self, "ad" + str(i), PeripheralAD(self, i))
+        # for i in range(0, 12):
+        #     setattr(self, "ad" + str(i), PeripheralAD(self, i))
 
-        for i in range(0, 2):
-            setattr(self, "uart" + str(i), PeripheralUART(self, i))
+        # for i in range(0, 2):
+        #     setattr(self, "uart" + str(i), PeripheralUART(self, i))
 
-        for i in range(0, 2):
-            setattr(self, "spi" + str(i), PeripheralSPI(self, i))
+        # for i in range(0, 2):
+        #     setattr(self, "spi" + str(i), PeripheralSPI(self, i))
 
-        for i in range(0, 1):
-            setattr(self, "i2c" + str(i), PeripheralI2C(self, i))
+        # for i in range(0, 1):
+        #     setattr(self, "i2c" + str(i), PeripheralI2C(self, i))
 
-        for i in range(0, 6):
-            setattr(self, "pwm" + str(i), PeripheralPWM(self, i))
+        # for i in range(0, 6):
+        #     setattr(self, "pwm" + str(i), PeripheralPWM(self, i))
+
+        hw_peripherals = hwDefinition['peripherals']
+        hw_embeds = hwDefinition['embeds']
+
+        shared_map = {
+            'logicAnalyzer': LogicAnalyzer,
+            'measure': ObnizMeasure
+        }
+
+        peripheral_map = {
+            'io': PeripheralIO,
+            'ad': PeripheralAD,
+            'uart': PeripheralUART,
+            'spi': PeripheralSPI,
+            'i2c': PeripheralI2C,
+            'pwm': PeripheralPWM
+        }
 
         setattr(self, "display", Display(self))
         setattr(self, "switch", ObnizSwitch(self))
@@ -55,9 +79,23 @@ class ObnizComponents(ObnizParts):
         setattr(self, "ble", ObnizBLE(self))
         setattr(self, "measure", ObnizMeasure(self))
 
+        for key in peripheral_map:
+            if hw_peripherals[key]:
+                units = hw_peripherals[key]['units']
+                classname = peripheral_map[key]
+                for unit_id in units:
+                    unit_id = int(unit_id)
+                    setattr(self, f"{key}{unit_id}", classname(self, unit_id))
+                    self._all_component_keys.append(f"{key}{unit_id}")
+
+        print(self._all_component_keys)
+                    
         # setattr(self, "util", ObnizUtil(self))
 
     def _reset_components(self):
+        if self.hw is None:
+            return
+
         self.print_debug("components state resets")
         for i in range(0, 12):
             getattr(self, "io" + str(i))._reset()
@@ -208,6 +246,10 @@ class ObnizComponents(ObnizParts):
         spi = self.get_free_spi()
         spi.start(config)
         return spi
+
+    def _call_on_connect(self):
+        self._prepare_components()
+        super()._call_on_connect()
 
 #   getFreeUart() {
 #     i = 0
