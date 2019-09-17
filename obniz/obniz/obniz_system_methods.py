@@ -20,11 +20,10 @@ class ObnizSystemMethods(ObnizComponents):
 
     def reset(self):
         self.send({"system": {"reset": True}})
-        self._prepare_components()
+        self._reset_components()
 
     def reboot(self):
         self.send({"system": {"reboot": True}})
-        self._prepare_components()
 
     def self_check(self):
         self.send({"system": {"self_check": True}})

@@ -34,27 +34,8 @@ class ObnizComponents(ObnizParts):
         hwDefinition = HW.get_definition_for(self.hw)
         if hwDefinition is None:
             raise Exception(f"unknown hw {self.hw}")
-        # print(hwDefinition)
 
         setattr(self, "io", PeripheralIO_(self))
-
-        # for i in range(0, 12):
-        #     setattr(self, "io" + str(i), PeripheralIO(self, i))
-
-        # for i in range(0, 12):
-        #     setattr(self, "ad" + str(i), PeripheralAD(self, i))
-
-        # for i in range(0, 2):
-        #     setattr(self, "uart" + str(i), PeripheralUART(self, i))
-
-        # for i in range(0, 2):
-        #     setattr(self, "spi" + str(i), PeripheralSPI(self, i))
-
-        # for i in range(0, 1):
-        #     setattr(self, "i2c" + str(i), PeripheralI2C(self, i))
-
-        # for i in range(0, 6):
-        #     setattr(self, "pwm" + str(i), PeripheralPWM(self, i))
 
         hw_peripherals = hwDefinition['peripherals']
         hw_embeds = hwDefinition['embeds']
@@ -73,11 +54,16 @@ class ObnizComponents(ObnizParts):
             'pwm': PeripheralPWM
         }
 
-        setattr(self, "display", Display(self))
-        setattr(self, "switch", ObnizSwitch(self))
-        setattr(self, "logicAnalyzer", LogicAnalyzer(self))
-        setattr(self, "ble", ObnizBLE(self))
-        setattr(self, "measure", ObnizMeasure(self))
+        embeds_map = {
+            'display': Display,
+            'switch': ObnizSwitch,
+            'ble': ObnizBLE
+        }
+
+        for key in shared_map:
+            classname = shared_map[key]
+            setattr(self, key, classname(self))
+            self._all_component_keys.append(key)
 
         for key in peripheral_map:
             if hw_peripherals[key]:
@@ -88,57 +74,28 @@ class ObnizComponents(ObnizParts):
                     setattr(self, f"{key}{unit_id}", classname(self, unit_id))
                     self._all_component_keys.append(f"{key}{unit_id}")
 
-        print(self._all_component_keys)
-                    
+        for key in embeds_map:
+            if key in hw_embeds:
+                classname = embeds_map[key]
+                setattr(self, key, classname(self))
+                self._all_component_keys.append(key)
         # setattr(self, "util", ObnizUtil(self))
 
     def _reset_components(self):
-        if self.hw is None:
-            return
-
         self.print_debug("components state resets")
-        for i in range(0, 12):
-            getattr(self, "io" + str(i))._reset()
 
-        for i in range(0, 12):
-            getattr(self, "ad" + str(i))._reset()
-
-        for i in range(0, 2):
-            getattr(self, "uart" + str(i))._reset()
-
-        for i in range(0, 2):
-            getattr(self, "spi" + str(i))._reset()
-
-        for i in range(0, 1):
-            getattr(self, "i2c" + str(i))._reset()
-
-        for i in range(0, 6):
-            getattr(self, "pwm" + str(i))._reset()
-
-        # self.display._reset()
-        self.switch._reset()
-        self.logicAnalyzer._reset()
-        self.ble._reset()
-        self.measure._reset()
+        for key in self._all_component_keys:
+            getattr(self, key)._reset()
 
     def notify_to_module(self, obj):
         super().notify_to_module(obj)
-        notify_handlers = ["io", "uart", "spi", "i2c", "ad"]
-        for peripheral in notify_handlers:
-            i = 0
-            while hasattr(self, peripheral + str(i)):
-                module_value = obj.get(peripheral + str(i))
-                if module_value is not None:
-                    getattr(self, peripheral + str(i)).notified(module_value)
-                i += 1
 
-        names = ["io", "switch", "ble", "measure"]
-        for name in names:
-            if name in obj:
-                getattr(self, name).notified(obj[name])
-
-        if "logic_analyzer" in obj:
-            self.logicAnalyzer.notified(obj["logic_analyzer"])
+        for key in self._all_component_keys:
+            if key == 'logicalAnalyzer':
+                if 'logic_analyzer' in obj:
+                    getattr(self, 'logic_analyzer').notified(obj['logic_analyzer'])
+            if key in obj:
+                getattr(self, key).notified(obj[key])
 
     #   handleSystemCommand(wsObj) {
     #     super.handleSystemCommand(wsObj)
@@ -171,7 +128,7 @@ class ObnizComponents(ObnizParts):
                 self.pong_observers.pop(i)
 
     def is_valid_io(self, io):
-        return type(io) is int and io >= 0 and io < 12
+        return type(io) is int and f'io{io}' in self._all_component_keys
 
     def set_vcc_gnd(self, vcc, gnd, drive=None):
         if self.is_valid_io(vcc):
@@ -196,28 +153,22 @@ class ObnizComponents(ObnizParts):
 
         return getattr(self, "ad" + str(io))
 
+    def _get_free_peripheral_unit(self, peripheral):
+        for key in self._all_component_keys:
+            if key.find(peripheral) == 0:
+                # "io" for "io0"
+                if hasattr(self, key):
+                    obj = getattr(self, key)
+                    if not obj.is_used():
+                        obj.used = True
+                        return obj
+        raise Exception(f'No More {peripheral} Available.')
+
     def get_free_pwm(self):
-        i = 0
-        for i in range(0, 6):
-            pwm = getattr(self, "pwm" + str(i))
-            if not pwm:
-                break
-
-            if not pwm.is_used():
-                pwm.used = True
-                return pwm
-
-        raise Exception("No More PWM Available. max = " + str(i))
+        return self._get_free_peripheral_unit('pwm')
 
     def get_free_i2c(self):
-        for i in range(1):
-            i2c = getattr(self, "i2c" + str(i))
-            if not i2c:
-                break
-            if not i2c.is_used():
-                i2c.used = True
-                return i2c
-        raise Exception('No More I2C Available. max = ' + str(i))
+        return self._get_free_peripheral_unit('i2c')
 
     def get_i2c_with_config(self, config):
         if type(config) not in [dict, attrdict.default.AttrDefault]:
@@ -229,14 +180,7 @@ class ObnizComponents(ObnizParts):
         return i2c
 
     def get_free_spi(self):
-        for i in range(2):
-            spi = getattr(self, "spi" + str(i))
-            if not spi:
-                break
-            if not spi.is_used():
-                spi.used = True
-                return spi
-        raise Exception('No More SPI Available. max = ' + str(i))
+        return self._get_free_peripheral_unit('spi')
 
     def get_spi_with_config(self, config):
         if type(config) not in [dict, attrdict.default.AttrDefault]:
@@ -251,18 +195,5 @@ class ObnizComponents(ObnizParts):
         self._prepare_components()
         super()._call_on_connect()
 
-#   getFreeUart() {
-#     i = 0
-#     for (i = 0 i < 2 i++) {
-#       uart = self['uart' + i]
-#       if (!uart) {
-#         break
-#       }
-#       if (!uart.isUsed()) {
-#         uart.used = true
-#         return uart
-#       }
-#     }
-#     throw new Error('No More uart Available. max = ' + i)
-#   }
-# }
+    def get_free_uart(self):
+        return self._get_free_peripheral_unit('uart')

@@ -130,9 +130,8 @@ class PeripheralUART:
 
             self.received.extend(obj["data"])
 
-    # isUsed() {
-    #     return self.used
-    # }
+    def is_used(self):
+        return self.used
 
     def end(self):
         obj = {}
