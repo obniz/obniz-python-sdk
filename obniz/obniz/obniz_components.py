@@ -85,6 +85,9 @@ class ObnizComponents(ObnizParts):
         self.print_debug("components state resets")
 
         for key in self._all_component_keys:
+            # ToDo: Clarify why is it deleted?
+            if key == 'display':
+                continue
             getattr(self, key)._reset()
 
     def notify_to_module(self, obj):
