@@ -94,9 +94,9 @@ class ObnizComponents(ObnizParts):
         super().notify_to_module(obj)
 
         for key in self._all_component_keys:
-            if key == 'logicalAnalyzer':
+            if key == 'logicAnalyzer':
                 if 'logic_analyzer' in obj:
-                    getattr(self, 'logic_analyzer').notified(obj['logic_analyzer'])
+                    getattr(self, 'logicAnalyzer').notified(obj['logic_analyzer'])
             if key in obj:
                 getattr(self, key).notified(obj[key])
 
