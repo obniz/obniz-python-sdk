@@ -65,8 +65,6 @@ class ObnizConnection:
     def ws_on_message(self, data):
         obj = json.loads(data)
 
-        print(obj)
-
         if type(obj) is list:
             for o in obj:
                 self.notify_to_module(o)
