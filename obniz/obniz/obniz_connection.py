@@ -24,10 +24,9 @@ class ObnizConnection:
         self.send_pool = None
         self._sendQueueTimer = None
         self._wait_for_local_connect_ready_timer = None
+        self.hw = None
 
         self._connection_retry_count = 0
-
-        self._prepare_components()
 
         if options is None:
             options = {}
@@ -65,6 +64,8 @@ class ObnizConnection:
 
     def ws_on_message(self, data):
         obj = json.loads(data)
+
+        print(obj)
 
         if type(obj) is list:
             for o in obj:
@@ -408,6 +409,7 @@ class ObnizConnection:
     def handle_ws_command(self, ws_obj):
         if "ready" in ws_obj:
             self.firmware_ver = ws_obj["obniz"]["firmware"]
+            self.hw = ws_obj["obniz"]["hw"]
             if self.options["reset_obniz_on_ws_disconnection"]:
                 self.reset_on_disconnect(True)
 

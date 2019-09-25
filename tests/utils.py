@@ -78,7 +78,7 @@ def assert_send(obniz, expected):
 
     assert_json(stub.call_args_list[count][0][0], "[obniz.send]invalid json")
     val = json.loads(stub.call_args_list[count][0][0])
-    assert val == expected, val + " != " + expected
+    assert val == expected, f'{val} != {expected}'
 
     validate_errors = validator.request_validate(val, "json")
     assert validate_errors["valid"], validate_errors["errors"]

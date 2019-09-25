@@ -58,7 +58,7 @@ class TestPeripheralAD:
 
         assert_finished(obniz)
 
-    def tset_in_var(self, obniz):
+    def test_in_var(self, obniz):
         obniz.ad1.start()
         assert_send(obniz, [{"ad1": {"stream": True}}])
 
