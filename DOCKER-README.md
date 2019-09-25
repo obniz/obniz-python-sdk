@@ -59,6 +59,11 @@ find . -name \*.pyc -delete
 ## ファイル作成
 python3 setup.py sdist bdist_wheel
 
+## ローカルでpip installテスト
+pip install dist/xxxx.whl
+
+**インストール先は`pip show xxx`で確認**
+
 ## testアップロード
 
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
