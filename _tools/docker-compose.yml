@@ -7,7 +7,7 @@ services:
     working_dir: '/root/opt'
     tty: true
     volumes:
-      - ./:/root/opt
+      - ../:/root/opt
     ports:
       - "8080:8080"
       - "8081:8081"

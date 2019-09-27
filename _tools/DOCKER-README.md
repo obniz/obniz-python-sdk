@@ -1,9 +1,10 @@
 
 ## コンテナ起動
 下記コマンドにて、コンテナを起動する。
+working dir は プロジェクトルート
 
 ```:ターミナル
-$ docker-compose up -d --build
+$ docker-compose -f ./_tools/docker-compose.yml up -d --build
 ```
 
 ## 使いたいライブラリを追加
