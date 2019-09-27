@@ -3,6 +3,7 @@
 [![image](https://img.shields.io/pypi/pyversions/obniz.svg)](https://pypi.org/project/obniz/)
 
 [obniz](https://obniz.io/) sdk for python.
+You can use [obnizBoard](https://obniz.io/doc/obniz_board_hobby_90/hw_overview) or [obnizOS](https://obniz.io/doc/obnizos/os_overview).
 
 Control obniz from python.
 

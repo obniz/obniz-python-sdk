@@ -3,6 +3,7 @@
 [![image](https://img.shields.io/pypi/pyversions/obniz.svg)](https://pypi.org/project/obniz/)
 
 [obniz](https://obniz.io/)をpythonから操作するためのsdkです。
+[obnizBoard](https://obniz.io/ja/doc/obniz_board_hobby_90/hw_overview)と[obnizOS](https://obniz.io/ja/doc/obnizos/os_overview)に対応しています
 
 **Python 3.6以上**で動作します。
 
