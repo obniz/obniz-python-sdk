@@ -41,7 +41,7 @@ class TestObniz:
 
     def test_ready(self, obniz, mocker):
         obniz.onconnect = mocker.stub()
-        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}])
+        receive_json(obniz, [{'ws': {'ready': True, 'obniz': {'hw': 'obnizb1', 'firmware': '2.0.2'}}}])
 
         assert obniz.onconnect.call_count == 1
         assert len(obniz.onconnect.call_args[0]) == 1
