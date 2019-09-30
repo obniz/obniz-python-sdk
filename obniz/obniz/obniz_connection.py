@@ -24,10 +24,10 @@ class ObnizConnection:
         self.send_pool = None
         self._sendQueueTimer = None
         self._wait_for_local_connect_ready_timer = None
+        self.hw = None
+        self.connection_state = 'closed'  # closed/connecting/connected/closing
 
         self._connection_retry_count = 0
-
-        self._prepare_components()
 
         if options is None:
             options = {}
@@ -156,6 +156,7 @@ class ObnizConnection:
         url += "?" + "&".join(query)
 
         self.print_debug("connecting to " + url)
+        self.connection_state = 'connecting'
 
         async def connecting():
             async with websockets.connect(url) as websocket:
@@ -167,11 +168,13 @@ class ObnizConnection:
                         data = await websocket.recv()
                         self.ws_on_message(data)
                     except websockets.exceptions.ConnectionClosed as e:
-                        print(e)
-                        self.ws_on_close()
+                        # ws:redirectのときは正常
+                        if self.connection_state == 'connected' :
+                            self.error(e)
+                            self.ws_on_close()
                         break
                     except Exception as e:
-                        print(e)
+                        self.error(e)
                         break
 
         asyncio.ensure_future(connecting())
@@ -281,13 +284,14 @@ class ObnizConnection:
         if self.socket:
             if self.socket.open:
                 #  Connecting & Connected
+                self.connection_state = 'closing'
                 self.socket.close(1000, "close")
 
             self.clear_socket(self.socket)
             self.socket = None
+        self.connection_state = 'closed'
 
     def _call_on_connect(self):
-        print("_call_on_connect")
         should_call = True
         if self._wait_for_local_connect_ready_timer:
             # obniz.js has wait local_connect
@@ -302,6 +306,7 @@ class ObnizConnection:
                 # local_connect is not used
                 pass
 
+        self.connection_state = 'connected'
         self.emitter.emit("connected")
 
         if should_call:
@@ -312,7 +317,7 @@ class ObnizConnection:
                     else:
                         self.onconnect(self)
                 except Exception as e:
-                    print(e)
+                    self.error(e)
 
             self.on_connect_called = True
 
@@ -408,6 +413,7 @@ class ObnizConnection:
     def handle_ws_command(self, ws_obj):
         if "ready" in ws_obj:
             self.firmware_ver = ws_obj["obniz"]["firmware"]
+            self.hw = ws_obj["obniz"]["hw"]
             if self.options["reset_obniz_on_ws_disconnection"]:
                 self.reset_on_disconnect(True)
 

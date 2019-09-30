@@ -123,7 +123,7 @@ class TestInit:
 
         obniz.onconnect = onconnect
 
-        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}])
+        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"hw": "obnizb1", "firmware": "2.0.2"}}}])
 
         self._wait(500)
 
@@ -139,14 +139,15 @@ class TestInit:
             called = True
 
         obniz.repeat(callback)
-        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}])
+        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"hw": "obnizb1", "firmware": "2.0.2"}}}])
 
         self._wait(500)
         obniz.looper = None
 
         assert called is True
 
-    def test_connect_repeat(self, obniz):
+    def test_connect_repeat(self, uninitialized_obniz):
+        obniz = uninitialized_obniz
         results = True
         assert_obniz
         assert_finished  # input queue
@@ -167,7 +168,7 @@ class TestInit:
 
         obniz.repeat(callback)
 
-        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}])
+        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"hw": "obnizb1", "firmware": "2.0.2"}}}])
 
         self._wait(500)
         obniz.looper = None
@@ -184,12 +185,13 @@ class TestInit:
 
         obniz.connect_wait(callback)
 
-        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}])
+        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"hw": "obnizb1", "firmware": "2.0.2"}}}])
 
         self._wait(500)
         assert called is True
 
-    def test_connect_wait_timeout(self, obniz):
+    def test_connect_wait_timeout(self, uninitialized_obniz):
+        obniz = uninitialized_obniz
         called = False
         assert_obniz
         assert_finished  # input queue
@@ -203,7 +205,7 @@ class TestInit:
         def timer(loop):
             try:
                 receive_json(
-                    obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}]
+                    obniz, [{"ws": {"ready": True, "obniz": {"hw": "obnizb1", "firmware": "2.0.2"}}}]
                 )
             except Exception as e:
                 print(e)

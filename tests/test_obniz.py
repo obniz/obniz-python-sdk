@@ -40,12 +40,16 @@ class TestObniz:
         assert_finished(obniz)
 
     def test_ready(self, obniz, mocker):
-        obniz.onconnect = mocker.stub()
-        receive_json(obniz, [{"ws": {"ready": True, "obniz": {"firmware": "1.0.3"}}}])
+        onconnect_stub = mocker.stub()
+        def onconnect(x):
+            onconnect_stub(x)
 
-        assert obniz.onconnect.call_count == 1
-        assert len(obniz.onconnect.call_args[0]) == 1
-        assert obniz.onconnect.call_args[0][0] == obniz
+        obniz.onconnect = onconnect
+        receive_json(obniz, [{'ws': {'ready': True, 'obniz': {'hw': 'obnizb1', 'firmware': '2.0.2'}}}])
+
+        assert onconnect_stub.call_count == 1
+        assert len(onconnect_stub.call_args[0]) == 1
+        assert onconnect_stub.call_args[0][0] == obniz
 
         assert_send(obniz, [{"ws": {"reset_obniz_on_ws_disconnection": True}}])
 
