@@ -1,9 +1,9 @@
 version: '3'
 services:
-  python3:
+  obniz_python:
     restart: always
     build: .
-    container_name: 'python3'
+    container_name: 'obniz_python'
     working_dir: '/root/opt'
     tty: true
     volumes:
@@ -11,3 +11,11 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
+  python3:
+    restart: always
+    build: .
+    container_name: 'python3'
+    working_dir: '/root/opt'
+    tty: true
+    volumes:
+      - ../prototypetest:/root/opt

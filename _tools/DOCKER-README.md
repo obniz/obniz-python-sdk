@@ -11,7 +11,7 @@ $ docker-compose -f ./_tools/docker-compose.yml up -d --build
 
 ### コンテナへ接続
 ```:ターミナル
-$ docker exec -it python3 bash
+$ docker exec -it obniz_python bash
 ```
 
 ### インストール
@@ -21,7 +21,7 @@ volumeマウント後にしないといけないのでdockerfileにかけない�
 
 or 
 ```:ターミナル
-$ docker exec -it python3 pipenv install --deploy --dev
+$ docker exec -it obniz_python pipenv install --deploy --dev
 ```
 
 
@@ -32,7 +32,7 @@ $ docker exec -it python3 pipenv install --deploy --dev
 
 or 
 ```:ターミナル
-$ docker exec -it python3 pipenv run pytest
+$ docker exec -it obniz_python pipenv run pytest
 ```
 
 
@@ -40,7 +40,7 @@ $ docker exec -it python3 pipenv run pytest
   - pipenv run python xxx.py
 or 
 ```:ターミナル
-$ docker exec -it python3 pipenv run python xxx.py
+$ docker exec -it obniz_python pipenv run python xxx.py
 ```
 
 
@@ -73,7 +73,16 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 pip install --index-url https://test.pypi.org/simple/ obniz
 
-docker立ち上げて動くかテスト
+#### docker立ち上げて動くかテスト
+
+```
+$ docker-compose -f ./_tools/docker-compose.yml up -d --build
+$ docker exec -it python3 bash
+
+# docker内
+pipenv run python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple obniz
+python main.py
+```
 
 ## アップロード
 twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
