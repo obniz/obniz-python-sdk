@@ -69,5 +69,11 @@ pip install dist/xxxx.whl
 
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
+## testpypiでの動作テスト
+
+pip install --index-url https://test.pypi.org/simple/ obniz
+
+docker立ち上げて動くかテスト
+
 ## アップロード
 twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
