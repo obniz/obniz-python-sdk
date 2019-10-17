@@ -88,6 +88,8 @@ pipenv run python -m pip install --index-url https://test.pypi.org/simple/ --ext
 pipenv run python  prototypetest/main.py
 ```
 
+※バージョン指定する場合は `obniz==0.1.0` にかえる
+
 ## アップロード
 twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
 OR
