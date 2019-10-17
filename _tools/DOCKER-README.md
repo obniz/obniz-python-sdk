@@ -67,7 +67,11 @@ pip install dist/xxxx.whl
 
 ## testアップロード
 
+twine upload --repository pypitest dist/*
+OR
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+
 
 ## testpypiでの動作テスト
 
@@ -77,12 +81,14 @@ pip install --index-url https://test.pypi.org/simple/ obniz
 
 ```
 $ docker-compose -f ./_tools/docker-compose.yml up -d --build
-$ docker exec -it python3 bash
+$ docker exec -it obniz_python_prototypetest bash
 
 # docker内
 pipenv run python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple obniz
-python main.py
+pipenv run python  prototypetest/main.py
 ```
 
 ## アップロード
 twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
+OR
+twine upload --repository pypi dist/*

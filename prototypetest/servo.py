@@ -28,8 +28,7 @@ async def onconnect(obniz):
     obniz.switch.onchange = read_state
 
 
-obniz = Obniz('87783859')
-obniz.debugprint = True;
+obniz = Obniz('15696177')
 obniz.onconnect = onconnect
 
 asyncio.get_event_loop().run_forever()
