@@ -71,6 +71,7 @@ class Obniz(ObnizUIs):
 #######################
 # ReadParts
 #######################
+import os
 import glob
 import pathlib
 import importlib
@@ -89,7 +90,7 @@ for cls_path in cls_paths:
         partpath = pathlib.Path(part).resolve().parent
         part_name = partpath.name.replace("-", "")
         # Import parts module
-        module_path = "obniz" + str(partpath).replace(str(basepath.parent), "").replace("/", ".")
+        module_path = "obniz" + str(partpath).replace(str(basepath.parent), "").replace(os.sep, ".")
         module = importlib.import_module(module_path)
         try:
             if "info" in dir(getattr(module, part_name)):
