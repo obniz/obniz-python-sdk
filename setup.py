@@ -30,6 +30,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url=url,
     packages=setuptools.find_packages(),
+    include_package_data=True,
     install_requires=[
         'pyee==6.0.0',
         'websockets==7.0',

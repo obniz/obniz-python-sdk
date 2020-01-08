@@ -7,5 +7,4 @@ __pycache__/
 .pytest_cache/
 .vscode/
 .venv/
-test.py
 test-*.py
