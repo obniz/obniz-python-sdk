@@ -91,20 +91,20 @@ class PeripheralIO:
             if self.onchange:
                 self.onchange(obj)
 
-        elif type(obj) is object:
-            if obj.warning:
+        elif type(obj) is dict:
+            if obj.get('warning'):
                 self.obniz.warning(
                     {
                         "alert": "warning",
-                        "message": "io{}: {}".format(self.id, obj.warning.message),
+                        "message": "io{}: {}".format(self.id, obj['warning']['message']),
                     }
                 )
 
-            if obj.error:
+            if obj.get('error'):
                 self.obniz.error(
                     {
                         "alert": "error",
-                        "message": "io{}}: {}".format(self.id, obj.error.message),
+                        "message": "io{}}: {}".format(self.id, obj['error']['message']),
                     }
                 )
 

@@ -470,7 +470,7 @@ class ObnizConnection:
     #   }
 
     def warning(self, msg):
-        print("warning:" + str(msg))
+        print(str(msg["message"]))
 
     def error(self, msg):
-        print("error:" + str(msg))
+        print(str(msg["message"]))
