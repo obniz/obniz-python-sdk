@@ -319,6 +319,19 @@ class Hci:
         # debug('le read buffer size - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
+    def readBufferSize(self):
+        cmd = bytearray([0x00]*4)
+
+        # header
+        cmd[0] = HCI_COMMAND_PKT
+        cmd[1:3] = struct.pack("<h", (READ_BUFFER_SIZE_CMD))
+
+        # length
+        cmd[3] = 0x0
+
+        # debug('read buffer size - writing: ' + cmd.toString('hex'));
+        self._socket.write(cmd)
+
     ## def...
 
     def processCmdCompleteEvent(self, cmd, status, result):
@@ -333,7 +346,12 @@ class Hci:
             self.leReadBufferSize()
 
         elif cmd == READ_LE_HOST_SUPPORTED_CMD:
-            print("wip: READ_LE_HOST_SUPPORTED_CMD")
+            if status == 0:
+                le = result[0]
+                simul = result[1]
+
+                # debug('\t\t\tle = ' + le)
+                # debug('\t\t\tsimul = ' + simul)
 
         elif cmd == READ_LOCAL_VERSION_CMD:
             hciVer = result[0]
@@ -358,13 +376,22 @@ class Hci:
             # # -> BlenoBindings
 
         elif cmd == READ_BD_ADDR_CMD:
-            print("wip: READ_BD_ADDR_CMD")
+            self.addressType = 'public'
+            self.address = ':'.join([format(r, 'x') for r in reversed(result)])
+
+            # debug('address = ' + this.address)
+
+            # self.ee.emit('addressChange', self.address)
 
         elif cmd == LE_SET_SCAN_PARAMETERS_CMD:
-            print("wip: LE_SET_SCAN_PARAMETERS_CMD")
+            # self.ee.emit('stateChange', 'poweredOn')
+
+            # self.ee.emit('leScanParametersSet')
+            pass
 
         elif cmd == LE_SET_SCAN_ENABLE_CMD:
-            print("wip: LE_SET_SCAN_ENABLE_CMD")
+            # self.ee.emit('leScanEnableSet', status)
+            pass
 
         elif cmd == LE_SET_ADVERTISING_PARAMETERS_CMD:
             print("wip: LE_SET_ADVERTISING_PARAMETERS_CMD")
@@ -385,10 +412,26 @@ class Hci:
             print("wip: LE_LTK_NEG_REPLY_CMD")
 
         elif cmd == LE_READ_BUFFER_SIZE_CMD:
-            print("wip: LE_READ_BUFFER_SIZE_CMD")
+            if not status:
+                self.processLeReadBufferSize(result)
 
         elif cmd == READ_BUFFER_SIZE_CMD:
             print("wip: READ_BUFFER_SIZE_CMD")
+
+    # def...
+
+    def processLeReadBufferSize(self, result):
+        aclMtu = struct.unpack("<h", bytearray(result[0:2]))[0]
+        aclMaxInProgress = result[2]
+        if not aclMtu:
+            # // as per Bluetooth specs
+            # debug('falling back to br/edr buffer size');
+            self.readBufferSize()
+        else:
+            # debug('le acl mtu = ' + aclMtu);
+            # debug('le acl max in progress = ' + aclMaxInProgress);
+            self._aclMtu = aclMtu
+            self._aclMaxInProgress = aclMaxInProgress
 
     @ee.on('stateChange')
     def onStateChange(self, state):
