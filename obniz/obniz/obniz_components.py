@@ -1,6 +1,12 @@
 from .libs.embeds.ble.ble import ObnizBLE
+from .libs.embeds.ble_hci.ble import ObnizBLE as ObnizBLEHci
 from .libs.embeds.display import Display
 from .libs.embeds.switch import ObnizSwitch
+import semver
+
+from .libs.measurements.logicanalyzer import LogicAnalyzer
+from .libs.measurements.measure import ObnizMeasure
+
 from .libs.io_peripherals.ad import PeripheralAD
 from .libs.io_peripherals.i2c import PeripheralI2C
 from .libs.io_peripherals.io import PeripheralIO
@@ -8,11 +14,12 @@ from .libs.io_peripherals.io_ import PeripheralIO_
 from .libs.io_peripherals.pwm import PeripheralPWM
 from .libs.io_peripherals.spi import PeripheralSPI
 from .libs.io_peripherals.uart import PeripheralUART
-from .libs.measurements.logicanalyzer import LogicAnalyzer
-from .libs.measurements.measure import ObnizMeasure
-from .libs.hw.index import HW
+
 from .obniz_connection import ObnizConnection
+
 from .obniz_parts import ObnizParts
+
+from .libs.hw.index import HW
 
 import attrdict
 import asyncio
@@ -54,10 +61,14 @@ class ObnizComponents(ObnizParts):
             'pwm': PeripheralPWM
         }
 
+        ble = ObnizBLEHci
+        if semver.compare(self.firmware_ver, "3.0.0-beta") < 0:
+            ble = ObnizBLE
+
         embeds_map = {
             'display': Display,
             'switch': ObnizSwitch,
-            'ble': ObnizBLE
+            'ble': ble
         }
 
         for key in shared_map:
@@ -138,7 +149,7 @@ class ObnizComponents(ObnizParts):
             if drive:
                 self.get_io(vcc).drive(drive)
             self.get_io(vcc).output(True)
-        
+
         if self.is_valid_io(gnd):
             if drive:
                 self.get_io(gnd).drive(drive)
