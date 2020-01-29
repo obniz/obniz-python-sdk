@@ -94,15 +94,11 @@ class Hci:
 
     def onSocketData(self, array):
         data = list(array)
-        # debug('onSocketData: ' + data.toString('hex'))
 
         eventType = data[0]
-        # debug('\tevent type = ' + eventType);
 
         if HCI_EVENT_PKT == eventType:
             subEventType = data[1]
-
-            # debug('\tsub event type = ' + subEventType)
 
             if subEventType == EVT_DISCONN_COMPLETE:
                 print("wip")
@@ -113,11 +109,6 @@ class Hci:
                 cmd = struct.unpack("<h", bytearray(data[4:6]))[0]
                 status = data[6]
                 result = data[7:]
-
-                # debug('\t\tncmd = ' + ncmd);
-                # debug('\t\tcmd = ' + cmd);
-                # debug('\t\tstatus = ' + status);
-                # debug('\t\tresult = ' + result.toString('hex'));
 
                 self.processCmdCompleteEvent(cmd, status, result)
             elif subEventType == EVT_CMD_STATUS:
@@ -174,7 +165,6 @@ class Hci:
 
         eventMask[4:8] = cmd[:]
 
-        # # debug('set event mask - writing: ' + cmd.toString('hex'))
         self._socket.write(cmd)
 
     def reset(self):
@@ -187,7 +177,6 @@ class Hci:
         # length
         cmd[3] = 0x00
 
-        # debug('reset - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def resetBuffers(self):
@@ -205,7 +194,6 @@ class Hci:
         # length
         cmd[3] = 0x00
 
-        # debug('read local version - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def readBdAddr(self):
@@ -218,7 +206,6 @@ class Hci:
         # length
         cmd[3] = 0x00
 
-        # debug('read bd addr - writing: ' + cmd.toString('hex'))
         self._socket.write(cmd)
 
     def setLeEventMask(self):
@@ -234,7 +221,6 @@ class Hci:
 
         leEventMask[4:8] = cmd[:]
 
-        # # debug('set le event mask - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def readLeHostSupported(self):
@@ -247,7 +233,6 @@ class Hci:
         # length
         cmd[3] = 0x00
 
-        # debug('read LE host supported - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def writeLeHostSupported(self):
@@ -264,7 +249,6 @@ class Hci:
         cmd[4] = 0x01
         cmd[5] = 0x00
 
-        # debug('write LE host supported - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def setScanParameters(self):
@@ -284,7 +268,6 @@ class Hci:
         cmd[9] = 0x00
         cmd[10] = 0x00
 
-        # debug('set scan parameters - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def setScanEnabled(self, enabled, filterDuplicates):
@@ -301,7 +284,6 @@ class Hci:
         cmd[4] =  0x01 if enabled else 0x00
         cmd[5] =  0x01 if filterDuplicates else 0x00
 
-        # debug('set scan enabled - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     ## def...
@@ -316,7 +298,6 @@ class Hci:
         # length
         cmd[3] = 0x00
 
-        # debug('le read buffer size - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     def readBufferSize(self):
@@ -329,7 +310,6 @@ class Hci:
         # length
         cmd[3] = 0x0
 
-        # debug('read buffer size - writing: ' + cmd.toString('hex'));
         self._socket.write(cmd)
 
     ## def...
@@ -349,9 +329,6 @@ class Hci:
             if status == 0:
                 le = result[0]
                 simul = result[1]
-
-                # debug('\t\t\tle = ' + le)
-                # debug('\t\t\tsimul = ' + simul)
 
         elif cmd == READ_LOCAL_VERSION_CMD:
             hciVer = result[0]
@@ -378,8 +355,6 @@ class Hci:
         elif cmd == READ_BD_ADDR_CMD:
             self.addressType = 'public'
             self.address = ':'.join([format(r, 'x') for r in reversed(result)])
-
-            # debug('address = ' + this.address)
 
             # self.ee.emit('addressChange', self.address)
 
@@ -425,11 +400,8 @@ class Hci:
         aclMaxInProgress = result[2]
         if not aclMtu:
             # // as per Bluetooth specs
-            # debug('falling back to br/edr buffer size');
             self.readBufferSize()
         else:
-            # debug('le acl mtu = ' + aclMtu);
-            # debug('le acl max in progress = ' + aclMaxInProgress);
             self._aclMtu = aclMtu
             self._aclMaxInProgress = aclMaxInProgress
 
