@@ -1,5 +1,6 @@
 from pyee import EventEmitter
 from .gap import Gap
+from .gatt import Gatt
 
 class BlenoBindings:
     ee = EventEmitter()

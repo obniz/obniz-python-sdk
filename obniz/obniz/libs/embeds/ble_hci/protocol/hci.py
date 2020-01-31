@@ -166,7 +166,7 @@ class Hci:
         # # length
         cmd[3] = len(eventMask)
 
-        eventMask[4:8] = cmd[:]
+        cmd[4:12] = eventMask
 
         self._socket.write(cmd)
 
@@ -220,10 +220,10 @@ class Hci:
         cmd[1:3] = struct.pack("<h", (LE_SET_EVENT_MASK_CMD))
 
         # length
-        cmd[3] = 0x00
+        cmd[3] = len(leEventMask)
 
-        leEventMask[4:8] = cmd[:]
-
+        cmd[4:12] = leEventMask
+        print(cmd)
         self._socket.write(cmd)
 
     def readLeHostSupported(self):

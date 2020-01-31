@@ -3,11 +3,15 @@
 
 class BleScan:
     def __init__(self, obnizBle):
-        self.scanTarget = None
+        self.scan_target = None
         self.obnizBle = obnizBle
-        # self.emitter = emitter()
 
-        self.scannedPeripherals = []
+        self.scanned_peripherals = []
 
     def start(self, target, settings):
         print("SCAN!")
+
+    ## def...
+
+    def onfind(self):
+        pass

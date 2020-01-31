@@ -2,16 +2,16 @@ from .hci import ObnizBLEHci
 from .protocol.central.bindings import NobleBindings
 from .protocol.peripheral.bindings import BlenoBindings
 from .protocol.hci import Hci as HciProtocol
-# ###
+from .ble_helper import BleHelper
 
-# from .ble_peripheral import BlePeripheral
-# from .ble_service import BleService
-# from .ble_characteristic import BleCharacteristic
-# from .ble_descriptor import BleDescriptor
-# from .ble_remote_peripheral import BleRemotePeripheral
-# from .ble_advertisement import BleAdvertisement
+from .ble_peripheral import BlePeripheral
+from .ble_service import BleService
+from .ble_characteristic import BleCharacteristic
+from .ble_descriptor import BleDescriptor
+from .ble_remote_peripheral import BleRemotePeripheral
+from .ble_advertisement import BleAdvertisement
 from .ble_scan import BleScan
-# from .ble_security import BleSecurity
+from .ble_security import BleSecurity
 
 class ObnizBLE:
     def __init__(self, obniz):
@@ -27,11 +27,21 @@ class ObnizBLE:
 
         self._initialized = False
 
-        ##
+        self.remote_peripherals = []
 
+        self.service = BleService
+        self.characteristic = BleCharacteristic
+        self.descriptor = BleDescriptor
+        self.peripheral = BlePeripheral(self)
+
+        self.scanTarget = None
+
+        self.advertisement = BleAdvertisement(self)
         self.scan = BleScan(self)
+        self.security = BleSecurity(self)
 
         self._bind()
+        self._reset()
 
     async def init_wait(self):
         if not self._initialized:
@@ -41,6 +51,11 @@ class ObnizBLE:
     def notified(self, obj):
         if "hci" in obj:
             self.hci.notified(obj["hci"])
+
+    def _reset(self):
+        pass
+
+    ## def...
 
     def onStateChange(self):
         pass
