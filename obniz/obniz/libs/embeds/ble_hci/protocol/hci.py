@@ -80,6 +80,7 @@ LE_LTK_NEG_REPLY_CMD = OCF_LE_LTK_NEG_REPLY | (OGF_LE_CTL << 10)
 
 HCI_OE_USER_ENDED_CONNECTION = 0x13
 
+# let STATUS_MAPPER = require('./hci-status')
 
 class Hci:
     ee = EventEmitter()
@@ -128,6 +129,10 @@ class Hci:
 
         self._handleBuffers = {}
 
+        @self.ee.on('stateChange')
+        def onStateChange(state):
+            self.onStateChange(state)
+
         self._socket = self.Socket(self._obnizHci)
 
         self._obnizHci.onread = self.onSocketData
@@ -145,12 +150,10 @@ class Hci:
         # // this.readLeHostSupported();
         # // this.readBdAddr();
 
-        # return new Promise(resolve => {
-        #     this.once('stateChange', () => {
-        #     // console.log('te');
-        #     resolve();
-        #     });
-        # });
+        @self.ee.once('stateChange')
+        def onStateChange(state):
+            # print('te')
+            self.onStateChange(state)
 
     def setEventMask(self):
         cmd = bytearray([0x00]*12)
@@ -338,35 +341,32 @@ class Hci:
             lmpSubVer = struct.unpack("<h", bytearray(result[6:8]))[0]
 
             if hciVer < 0x06:
-                self.ee.emit("stateChange", self, "unsuported")
+                self.ee.emit("stateChange", "unsupported")
             elif not self._state == "poweredOn":
                 self.setScanEnabled(False, True)
                 self.setScanParameters()
             
-            # self.ee.emit('readLocalVersion',
-            #     hciVer,
-            #     hciRev,
-            #     lmpSubVer,
-            #     manufacturer,
-            #     lmpSubVer
-            # ) 
-            # # -> BlenoBindings
+            self.ee.emit('readLocalVersion',
+                hciVer,
+                hciRev,
+                lmpVer,
+                manufacturer,
+                lmpSubVer
+            ) 
 
         elif cmd == READ_BD_ADDR_CMD:
             self.addressType = 'public'
             self.address = ':'.join([format(r, 'x') for r in reversed(result)])
 
-            # self.ee.emit('addressChange', self.address)
+            self.ee.emit('addressChange', self.address)
 
         elif cmd == LE_SET_SCAN_PARAMETERS_CMD:
-            # self.ee.emit('stateChange', 'poweredOn')
+            self.ee.emit('stateChange', 'poweredOn')
 
-            # self.ee.emit('leScanParametersSet')
-            pass
+            self.ee.emit('leScanParametersSet')
 
         elif cmd == LE_SET_SCAN_ENABLE_CMD:
-            # self.ee.emit('leScanEnableSet', status)
-            pass
+            self.ee.emit('leScanEnableSet', status)
 
         elif cmd == LE_SET_ADVERTISING_PARAMETERS_CMD:
             print("wip: LE_SET_ADVERTISING_PARAMETERS_CMD")
@@ -405,6 +405,5 @@ class Hci:
             self._aclMtu = aclMtu
             self._aclMaxInProgress = aclMaxInProgress
 
-    @ee.on('stateChange')
     def onStateChange(self, state):
         self._state = state
