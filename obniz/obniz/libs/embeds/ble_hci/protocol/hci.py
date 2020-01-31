@@ -223,7 +223,6 @@ class Hci:
         cmd[3] = len(leEventMask)
 
         cmd[4:12] = leEventMask
-        print(cmd)
         self._socket.write(cmd)
 
     def readLeHostSupported(self):
