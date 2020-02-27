@@ -51,7 +51,7 @@ class BleScan:
     def onfind(self, params):
         pass
 
-    def notify_from_server(self, notify_name, params):
+    def notify_from_server(self, notify_name, params=None):
         if notify_name == 'onfind':
             # duplicate filter
             if next(filter(lambda e:e.address is params.address, self.scanned_peripherals), None):

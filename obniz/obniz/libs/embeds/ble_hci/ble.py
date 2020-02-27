@@ -72,8 +72,7 @@ class ObnizBLE:
         pass
     
     def on_scan_stop(self):
-        print("wip: on_scan_stop")
-        # this.scan.notifyFromServer('onfinish')
+        self.scan.notify_from_server('onfinish')
 
     def on_discover(self, uuid, address, address_type, connectable, advertisement, rssi):
         val = self.find_peripheral(uuid)
