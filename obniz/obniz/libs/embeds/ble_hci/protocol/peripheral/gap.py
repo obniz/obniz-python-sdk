@@ -8,20 +8,20 @@ class Gap:
         self._advertiseState = None
 
         # @self._hci.ee.on('error')
-        # def onHciError():
-        #     self.onHciError()
-        # @self._hci.ee.on('leAdvertisingParametersSet')
-        # def onHciLeAdvertisingParametersSet():
-        #     self.onHciLeAdvertisingParametersSet()
-        # @self._hci.ee.on('leAdvertisingDataSet')
-        # def onHciLeAdvertisingDataSet():
-        #     self.onHciLeAdvertisingDataSet()
-        # @self._hci.ee.on('leScanResponseDataSet')
-        # def onHciLeScanResponseDataSet():
-        #     self.onHciLeScanResponseDataSet()
-        # @self._hci.ee.on('leAdvertiseEnableSet')
-        # def onHciLeAdvertiseEnableSet():
-        #     self.onHciLeAdvertiseEnableSet()
+        # def on_hci_error():
+        #     self.on_hci_error()
+        # @self._hci.ee.on('le_advertising_parameters_set')
+        # def on_hci_le_advertising_parameters_set():
+        #     self.on_hci_le_advertising_parameters_set()
+        # @self._hci.ee.on('le_advertising_data_set')
+        # def on_hci_le_advertising_data_set():
+        #     self.on_hci_le_advertising_data_set()
+        # @self._hci.ee.on('le_scan_response_data_set')
+        # def on_hci_le_scan_response_data_set():
+        #     self.on_hci_le_scan_response_data_set()
+        # @self._hci.ee.on('le_advertise_enable_set')
+        # def on_hci_le_advertise_enable_set():
+        #     self.on_hci_le_advertise_enable_set()
 
-    # def onHciError(self, error):
+    # def on_hci_error(self, error):
     #     pass

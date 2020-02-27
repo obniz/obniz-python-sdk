@@ -16,22 +16,22 @@ class BlenoBindings:
 
         self._address = None
         self._handle = None
-        self._aclStream = None
+        self._acl_stream = None
 
     def init(self):
-        @self._hci.ee.on('stateChange')
-        def onStateChange(state):
-            self.onStateChange(state)
+        @self._hci.ee.on('state_change')
+        def on_state_change(state):
+            self.on_state_change(state)
 
-        @self._hci.ee.on('addressChange')
-        def onAddressChange(address):
-            self.onAddressChange(address)
+        @self._hci.ee.on('address_change')
+        def on_address_change(address):
+            self.on_address_change(address)
 
-        @self._hci.ee.on('readLocalVersion')
-        def onReadLocalVersion(hciVer, hciRev, lmpVer, manufacturer, lmpSubVer):
-            self.onReadLocalVersion(hciVer, hciRev, lmpVer, manufacturer, lmpSubVer)
+        @self._hci.ee.on('read_local_version')
+        def onReadLocalVersion(hci_ver, hci_rev, lmp_ver, manufacturer, lmp_sub_ver):
+            self.onReadLocalVersion(hci_ver, hci_rev, lmp_ver, manufacturer, lmp_sub_ver)
 
-    def onStateChange(self, state):
+    def on_state_change(self, state):
         if self._state == state:
             return
         self._state = state
@@ -45,10 +45,10 @@ class BlenoBindings:
             print('               Try to run with environment variable:')
             print('               [sudo] BLENO_HCI_DEVICE_ID=x node ...')
 
-        self.ee.emit('stateChange', state)
+        self.ee.emit('state_change', state)
 
-    def onAddressChange(self, address):
-        self.ee.emit('addressChange', address)
+    def on_address_change(self, address):
+        self.ee.emit('address_change', address)
 
-    def onReadLocalVersion(self, hciVer, hciRev, lmpVer, manufacturer, lmpSubVer):
+    def onReadLocalVersion(self, hci_ver, hci_rev, lmp_ver, manufacturer, lmp_sub_ver):
         pass

@@ -1,5 +1,7 @@
 import struct
 from pyee import EventEmitter
+import asyncio
+import re
 
 HCI_COMMAND_PKT = 0x01
 HCI_ACLDATA_PKT = 0x02
@@ -82,6 +84,7 @@ HCI_OE_USER_ENDED_CONNECTION = 0x13
 
 # let STATUS_MAPPER = require('./hci-status')
 
+
 class Hci:
     ee = EventEmitter()
 
@@ -93,80 +96,101 @@ class Hci:
             arr = list(data)
             self._obnizHci.write(arr)
 
-    def onSocketData(self, array):
+    def on_socket_data(self, array):
         data = list(array)
+        event_type = data[0]
 
-        eventType = data[0]
+        if HCI_EVENT_PKT == event_type:
+            sub_event_type = data[1]
 
-        if HCI_EVENT_PKT == eventType:
-            subEventType = data[1]
-
-            if subEventType == EVT_DISCONN_COMPLETE:
-                print("wip")
-            elif subEventType == EVT_ENCRYPT_CHANGE:
-                print("wip")
-            elif subEventType == EVT_CMD_COMPLETE:
+            if sub_event_type == EVT_DISCONN_COMPLETE:
+                print("wip: EVT_DISCONN_COMPLETE")
+            elif sub_event_type == EVT_ENCRYPT_CHANGE:
+                print("wip: EVT_ENCRYPT_CHANGE")
+            elif sub_event_type == EVT_CMD_COMPLETE:
                 ncmd = data[3]
                 cmd = struct.unpack("<h", bytearray(data[4:6]))[0]
                 status = data[6]
                 result = data[7:]
 
-                self.processCmdCompleteEvent(cmd, status, result)
-            elif subEventType == EVT_CMD_STATUS:
-                print("wip")
-            elif subEventType == EVT_LE_META_EVENT:
-                print("wip")
-            elif subEventType == EVT_NUMBER_OF_COMPLETED_PACKETS:
-                print("wip")
-        elif HCI_ACLDATA_PKT == eventType:
+                self.process_cmd_complete_event(cmd, status, result)
+            elif sub_event_type == EVT_CMD_STATUS:
+                print("wip: EVT_CMD_STATUS")
+            elif sub_event_type == EVT_LE_META_EVENT:
+                le_meta_event_type = data[3]
+                le_meta_event_status = data[4]
+                le_meta_event_data = data[5:]
+
+                self.process_le_meta_event(
+                    le_meta_event_type, le_meta_event_status, le_meta_event_data)
+            elif sub_event_type == EVT_NUMBER_OF_COMPLETED_PACKETS:
+                print("wip: EVT_NUMBER_OF_COMPLETED_PACKETS:", EVT_NUMBER_OF_COMPLETED_PACKETS)
+                handles = data[3]
+                for i in range(handles):
+                    handle = struct.unpack("<h", bytearray(data[4+i*4:4+i*4+2]))[0]
+                    pkts = struct.unpack("<h", bytearray(data[6+i*4:6+i*4+2]))[0]
+                    if len(self._handle_acls_in_progress) < handle:
+                        continue
+                    if pkts > self._handle_acls_in_progress[handle]:
+                        self._handle_acls_in_progress[handle] = 0
+                    else:
+                        self._handle_acls_in_progress[handle] -= pkts
+                self.push_acl_out_queue()
+
+        elif HCI_ACLDATA_PKT == event_type:
             print("wip")
-        elif HCI_COMMAND_PKT == eventType:
+        elif HCI_COMMAND_PKT == event_type:
             print("wip")
 
     def __init__(self, obnizHci):
+        self.observers = []
         self._obnizHci = obnizHci
         self._state = None
 
-        self._handleBuffers = {}
+        self._handle_buffers = {}
 
-        @self.ee.on('stateChange')
-        def onStateChange(state):
-            self.onStateChange(state)
+        @self.ee.on('state_change')
+        def on_state_change(state):
+            self.on_state_change(state)
 
         self._socket = self.Socket(self._obnizHci)
 
-        self._obnizHci.onread = self.onSocketData
+        self._obnizHci.onread = self.on_socket_data
 
     # util.inherits(Hci, events.EventEmitter)
 
     # Hci.STATUS_MAPPER = STATUS_MAPPER
 
-    async def init_wait(self):
+    def init_wait(self):
         self.reset()
-        # // this.setEventMask();
-        # // this.setLeEventMask();
-        # // this.readLocalVersion();
-        # // this.writeLeHostSupported();
-        # // this.readLeHostSupported();
-        # // this.readBdAddr();
+        # // this.set_event_mask();
+        # // this.set_le_event_mask();
+        # // this.read_local_version();
+        # // this.write_le_host_supported();
+        # // this.read_le_host_supported();
+        # // this.read_bd_addr();
 
-        @self.ee.once('stateChange')
-        def onStateChange(state):
+        future = asyncio.get_event_loop().create_future()
+
+        @self.ee.once('state_change')
+        def on_state_change(state):
+            future.set_result(state)
             # print('te')
-            self.onStateChange(state)
 
-    def setEventMask(self):
+        return future
+
+    def set_event_mask(self):
         cmd = bytearray([0x00]*12)
-        eventMask = list(bytes.fromhex('fffffbff07f8bf3d'))
+        event_Mask = list(bytes.fromhex('fffffbff07f8bf3d'))
 
         # header
         cmd[0] = HCI_COMMAND_PKT
         cmd[1:3] = struct.pack("<h", SET_EVENT_MASK_CMD)
 
         # # length
-        cmd[3] = len(eventMask)
+        cmd[3] = len(event_Mask)
 
-        cmd[4:12] = eventMask
+        cmd[4:12] = event_Mask
 
         self._socket.write(cmd)
 
@@ -182,12 +206,12 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def resetBuffers(self):
-        self._handleAclsInProgress = {}
-        self._handleBuffers = {}
-        self._aclOutQueue = []
+    def reset_buffers(self):
+        self._handle_acls_in_progress = {}
+        self._handle_buffers = {}
+        self._acl_out_queue = []
 
-    def readLocalVersion(self):
+    def read_local_version(self):
         cmd = bytearray([0x00]*4)
 
         # header
@@ -199,7 +223,7 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def readBdAddr(self):
+    def read_bd_addr(self):
         cmd = bytearray([0x00]*4)
 
         # header
@@ -211,21 +235,21 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def setLeEventMask(self):
+    def set_le_event_mask(self):
         cmd = bytearray([0x00]*4)
-        leEventMask = list(bytes.fromhex('1f00000000000000'))
+        le_event_mask = list(bytes.fromhex('1f00000000000000'))
 
         # header
         cmd[0] = HCI_COMMAND_PKT
         cmd[1:3] = struct.pack("<h", (LE_SET_EVENT_MASK_CMD))
 
         # length
-        cmd[3] = len(leEventMask)
+        cmd[3] = len(le_event_mask)
 
-        cmd[4:12] = leEventMask
+        cmd[4:12] = le_event_mask
         self._socket.write(cmd)
 
-    def readLeHostSupported(self):
+    def read_le_host_supported(self):
         cmd = bytearray([0x00]*4)
 
         # header
@@ -237,7 +261,7 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def writeLeHostSupported(self):
+    def write_le_host_supported(self):
         cmd = bytearray([0x00]*6)
 
         # header
@@ -253,7 +277,7 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def setScanParameters(self):
+    def set_scan_parameters(self):
         cmd = bytearray([0x00]*11)
 
         # header
@@ -272,7 +296,7 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def setScanEnabled(self, enabled, filterDuplicates):
+    def set_scan_enabled(self, enabled, filter_duplicates):
         cmd = bytearray([0x00]*6)
 
         # header
@@ -283,14 +307,14 @@ class Hci:
         cmd[3] = 0x02
 
         # data
-        cmd[4] =  0x01 if enabled else 0x00
-        cmd[5] =  0x01 if filterDuplicates else 0x00
+        cmd[4] = 0x01 if enabled else 0x00
+        cmd[5] = 0x01 if filter_duplicates else 0x00
 
         self._socket.write(cmd)
 
-    ## def...
+    # def...
 
-    def leReadBufferSize(self):
+    def le_read_buffer_size(self):
         cmd = bytearray([0x00]*4)
 
         # header
@@ -302,7 +326,7 @@ class Hci:
 
         self._socket.write(cmd)
 
-    def readBufferSize(self):
+    def read_buffer_size(self):
         cmd = bytearray([0x00]*4)
 
         # header
@@ -314,18 +338,37 @@ class Hci:
 
         self._socket.write(cmd)
 
-    ## def...
+    # def...
 
-    def processCmdCompleteEvent(self, cmd, status, result):
+    def push_acl_out_queue(self):
+        in_progress = 0
+        for handle in self._handle_acls_in_progress:
+            in_progress += self._handle_acls_in_progress[handle]
+        while in_progress < self._acl_max_in_progress and len(self._acl_out_queue):
+            in_progress += 1
+            self.write_one_acl_data_pkt()
+
+        if in_progress >= self._acl_max_in_progress and len(self._acl_out_queue):
+            pass
+
+    def write_one_acl_data_pkt(self):
+        pkt = self._acl_out_queue.pop()
+        self._handle_acls_in_progress[pkt.handle] += 1
+
+        self._socket.write(pkt.pkt)
+
+    # def...
+
+    def process_cmd_complete_event(self, cmd, status, result):
         if cmd == RESET_CMD:
-            self.resetBuffers()
-            self.setEventMask()
-            self.setLeEventMask()
-            self.readLocalVersion()
-            self.readBdAddr()
-            self.writeLeHostSupported()
-            self.readLeHostSupported()
-            self.leReadBufferSize()
+            self.reset_buffers()
+            self.set_event_mask()
+            self.set_le_event_mask()
+            self.read_local_version()
+            self.read_bd_addr()
+            self.write_le_host_supported()
+            self.read_le_host_supported()
+            self.le_read_buffer_size()
 
         elif cmd == READ_LE_HOST_SUPPORTED_CMD:
             if status == 0:
@@ -333,39 +376,39 @@ class Hci:
                 simul = result[1]
 
         elif cmd == READ_LOCAL_VERSION_CMD:
-            hciVer = result[0]
-            hciRev = struct.unpack("<h", bytearray(result[1:3]))[0]
-            lmpVer = result[3]
+            hci_ver = result[0]
+            hci_rev = struct.unpack("<h", bytearray(result[1:3]))[0]
+            lmp_ver = result[3]
             manufacturer = struct.unpack("<h", bytearray(result[4:6]))[0]
-            lmpSubVer = struct.unpack("<h", bytearray(result[6:8]))[0]
+            lmp_sub_ver = struct.unpack("<h", bytearray(result[6:8]))[0]
 
-            if hciVer < 0x06:
-                self.ee.emit("stateChange", "unsupported")
+            if hci_ver < 0x06:
+                self.ee.emit("state_change", "unsupported")
             elif not self._state == "poweredOn":
-                self.setScanEnabled(False, True)
-                self.setScanParameters()
-            
-            self.ee.emit('readLocalVersion',
-                hciVer,
-                hciRev,
-                lmpVer,
-                manufacturer,
-                lmpSubVer
-            ) 
+                self.set_scan_enabled(False, True)
+                self.set_scan_parameters()
+
+            self.ee.emit('read_local_version',
+                         hci_ver,
+                         hci_rev,
+                         lmp_ver,
+                         manufacturer,
+                         lmp_sub_ver
+                         )
 
         elif cmd == READ_BD_ADDR_CMD:
             self.addressType = 'public'
             self.address = ':'.join([format(r, 'x') for r in reversed(result)])
 
-            self.ee.emit('addressChange', self.address)
+            self.ee.emit('address_change', self.address)
 
         elif cmd == LE_SET_SCAN_PARAMETERS_CMD:
-            self.ee.emit('stateChange', 'poweredOn')
+            self.ee.emit('state_change', 'poweredOn')
 
-            self.ee.emit('leScanParametersSet')
+            self.ee.emit('le_scan_parameters_set')
 
         elif cmd == LE_SET_SCAN_ENABLE_CMD:
-            self.ee.emit('leScanEnableSet', status)
+            self.ee.emit('le_scan_enable_set', status)
 
         elif cmd == LE_SET_ADVERTISING_PARAMETERS_CMD:
             print("wip: LE_SET_ADVERTISING_PARAMETERS_CMD")
@@ -387,22 +430,53 @@ class Hci:
 
         elif cmd == LE_READ_BUFFER_SIZE_CMD:
             if not status:
-                self.processLeReadBufferSize(result)
+                self.process_le_read_buffer_size(result)
 
         elif cmd == READ_BUFFER_SIZE_CMD:
             print("wip: READ_BUFFER_SIZE_CMD")
 
+    def process_le_meta_event(self, event_type, status, data):
+        if event_type == EVT_LE_CONN_COMPLETE:
+            self.process_le_conn_complete(status, data)
+        elif event_type == EVT_LE_ADVERTISING_REPORT:
+            self.process_le_advertising_report(status, data)
+        elif event_type == EVT_LE_CONN_UPDATE_COMPLETE:
+            self.process_le_conn_update_complete(status, data)
+
+    def process_le_conn_complete(self, status, data):
+        print("wip: EVT_LE_CONN_COMPLETE")
+
+    def process_le_advertising_report(self, count, data):
+        for i in range(count):
+            typ = data[0]
+            address_type = 'random' if data[1] == 0x01 else 'public'
+            address = ":".join(reversed([re.match('.{1,2}', str(format(x, '02x'))).group()
+                      for x in data[2:8]]))
+
+            eir_length = data[8]
+            eir = data[9: eir_length + 9]
+            rssi = data[eir_length + 9]
+
+            self.ee.emit("le_advertising_report", 0, typ, address, address_type, eir, rssi)
+
+            data = data[eir_length + 10:]
+
+
+
+    def process_le_conn_update_complete(self, status, data):
+        print("wip: EVT_LE_CONN_UPDATE_COMPLETE")
+
     # def...
 
-    def processLeReadBufferSize(self, result):
-        aclMtu = struct.unpack("<h", bytearray(result[0:2]))[0]
-        aclMaxInProgress = result[2]
-        if not aclMtu:
+    def process_le_read_buffer_size(self, result):
+        acl_mtu = struct.unpack("<h", bytearray(result[0:2]))[0]
+        acl_max_in_progress = result[2]
+        if not acl_mtu:
             # // as per Bluetooth specs
-            self.readBufferSize()
+            self.read_buffer_size()
         else:
-            self._aclMtu = aclMtu
-            self._aclMaxInProgress = aclMaxInProgress
+            self._acl_mtu = acl_mtu
+            self._acl_max_in_progress = acl_max_in_progress
 
-    def onStateChange(self, state):
+    def on_state_change(self, state):
         self._state = state
