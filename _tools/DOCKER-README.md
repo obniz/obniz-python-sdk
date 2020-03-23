@@ -90,6 +90,15 @@ pipenv run python  prototypetest/main.py
 
 ※バージョン指定する場合は `obniz==0.1.0` にかえる
 
+### repl.itでのテスト
+
+pyproject.tomlに追加してテスト
+```
+[[tool.poetry.source]]
+name = "test-pypi"
+url = "https://test.pypi.org/simple/"
+```
+
 ## アップロード
 twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
 OR
