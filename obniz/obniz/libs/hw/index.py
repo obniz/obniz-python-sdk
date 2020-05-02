@@ -13,6 +13,9 @@ class HW:
         elif hw == 'esp32w':
             with open(os.path.join(os.path.dirname(__file__), 'esp32w.json')) as f:
                 hw_obj = json.load(f)
+        elif hw == 'encored':
+            with open(os.path.join(os.path.dirname(__file__), 'encored.json')) as f:
+                hw_obj = json.load(f)
         else:
             hw_obj = None
         return hw_obj
