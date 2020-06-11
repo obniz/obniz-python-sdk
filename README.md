@@ -1,5 +1,10 @@
 # obniz.py: sdk for python
 
+ **This sdk is currently out  of maintenance.**
+- You can use this on obnizOS 1.X.X or 2.X.X, but cannot use 3.X.X. 
+- You can use only with obniz board / obniz Board 1Y. Other devices is not supported.
+
+
 [![image](https://img.shields.io/pypi/pyversions/obniz.svg)](https://pypi.org/project/obniz/)
 
 [obniz](https://obniz.io/) sdk for python.
