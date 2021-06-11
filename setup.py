@@ -33,7 +33,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=[
         'pyee==6.0.0',
-        'websockets==7.0',
+        'websockets==9.1',
         'attrdict==2.0.1',
         'semver==2.8.1'
     ],
