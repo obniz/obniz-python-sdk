@@ -12,10 +12,10 @@ testsubmit = "twine upload --repository testpypi dist/*"
 # no shortcut for production  submit for safe
 
 [packages]
-pyee = "*"
-websockets = "*"
-attrdict3 = "*"
-semver = "*"
+pyee = "==6.0.0"
+websockets = ">=12,<14"
+attrdict3 = "==2.0.2"
+semver = "==2.8.1"
 
 [dev-packages]
 asynctest = "*"
