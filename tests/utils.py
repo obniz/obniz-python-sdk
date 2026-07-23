@@ -1,7 +1,7 @@
 import asyncio
 import json
+from unittest.mock import AsyncMock
 
-import asynctest
 import pytest
 import websockets
 
@@ -27,7 +27,7 @@ def setup_obniz(mocker):
 
     stub = mocker.MagicMock(buffered_amount=0)
     # stub.on = mocker.stub()
-    stub.send = asynctest.CoroutineMock()
+    stub.send = AsyncMock()
     # stub.close = mocker.stub()
     # stub.removeAllListeners = mocker.stub()
 
