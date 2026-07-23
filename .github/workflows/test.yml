@@ -1,0 +1,45 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  # Full test suite. asynctest does not work on Python 3.11+
+  # (asyncio.coroutine was removed), so tests run on 3.8-3.10 only.
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and test dependencies
+        run: |
+          pip install .
+          pip install asynctest pytest pytest-mock pyyaml jsonschema
+      - name: Run tests
+        run: pytest -vv
+
+  # Import smoke test on newer Pythons where the test suite cannot run.
+  import-check:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package
+        run: pip install .
+      - name: Import check
+        working-directory: ${{ runner.temp }}
+        run: python -c "from obniz import Obniz; print('import OK')"
