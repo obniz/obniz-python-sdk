@@ -18,7 +18,6 @@ attrdict3 = "==2.0.2"
 semver = "==2.8.1"
 
 [dev-packages]
-asynctest = "*"
 # "black" requires python 3.6+
 # so if it exists in Pipfile, `pipenv insttall` must fail on Travis CI python 3.5
 # please install by your self via `pipenv run pip install black`
