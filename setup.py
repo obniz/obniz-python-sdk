@@ -33,14 +33,18 @@ setuptools.setup(
     include_package_data=True,
     install_requires=[
         'pyee==6.0.0',
-        'websockets==7.0',
-        'attrdict==2.0.1',
+        'websockets>=12,<14',
+        'attrdict3==2.0.2',
         'semver==2.8.1'
     ],
+    python_requires='>=3.8',
     classifiers=[
         "Programming Language :: Python :: 3",
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         "Operating System :: OS Independent",
     ],
 )

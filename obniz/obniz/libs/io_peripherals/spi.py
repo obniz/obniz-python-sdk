@@ -1,5 +1,3 @@
-from distutils.version import LooseVersion
-
 from ..utils.util import ObnizUtil
 
 import asyncio
@@ -91,10 +89,7 @@ class PeripheralSPI:
         if not self.used:
             raise Exception("spi{} is not started".format(self.id))
 
-        if (
-            LooseVersion(self.obniz.firmware_ver) <= LooseVersion("1.0.2")
-            and len(data) > 32
-        ):
+        if semver.match(self.obniz.firmware_ver, "<=1.0.2") and len(data) > 32:
             raise Exception(
                 "with your obniz "
                 + self.obniz.firmware_ver
