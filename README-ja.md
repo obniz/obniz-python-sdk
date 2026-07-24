@@ -114,6 +114,37 @@ obnizをobniz idを使ってインスタンス化します。 そして接続が
         uart.send("Hello")
 ```
 
+## Plugin / Lua
+
+obniz plugin対応デバイス上の自作ファームウェアやLuaスクリプトと通信できます(send/receiveはobnizファームウェア3.4.0以上、Luaは7.0.0以上)。
+
+```py
+    async def onconnect(obniz):
+        # デバイスファームウェアとのバイナリ/テキスト双方向通信
+        def onreceive(data, text):
+            print(data, text)
+        obniz.plugin.onreceive = onreceive
+        obniz.plugin.send("Hello")
+        obniz.plugin.send([0x00, 0x01, 0x02])
+
+        # デバイス上でLuaを即時実行(ファームウェア7.0.0以上)
+        obniz.plugin.exec_lua("duration = 60")
+
+        # Luaを実行して戻り値を待つ(ファームウェア7.1.0以上)
+        result = await obniz.plugin.call_wait("return 'hello from lua'")
+        print(result)  # "hello from lua"
+
+        # Lua側の cloud.transactionWait() リクエストに応答する
+        async def oncloudtransaction(data, text):
+            return "result for lua"
+        obniz.plugin.oncloudtransaction = oncloudtransaction
+
+        # Luaをフラッシュに保存して再読込
+        # (storage対応ハードウェア、ファームウェア7.0.0以上)
+        obniz.storage.save_plugin_lua('os.log("Hello World")')
+        obniz.plugin.reload_lua()
+```
+
 ## Example
 TensorFlowなどのpythonライブラリもとても簡単に行なえます。
 (`tensorflow` と `opencv-python` のインストールが必要です)

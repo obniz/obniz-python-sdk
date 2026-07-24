@@ -123,6 +123,37 @@ You are able to use everything on obniz after connect.
         uart.send("Hello")
 ```
 
+## Plugin / Lua
+
+Communicate with your own firmware or Lua scripts running on an obniz plugin device (obniz firmware >= 3.4.0 for send/receive, >= 7.0.0 for Lua).
+
+```py
+    async def onconnect(obniz):
+        # bidirectional binary/text messaging with device firmware
+        def onreceive(data, text):
+            print(data, text)
+        obniz.plugin.onreceive = onreceive
+        obniz.plugin.send("Hello")
+        obniz.plugin.send([0x00, 0x01, 0x02])
+
+        # run Lua on the device (firmware >= 7.0.0)
+        obniz.plugin.exec_lua("duration = 60")
+
+        # run Lua and wait for its return value (firmware >= 7.1.0)
+        result = await obniz.plugin.call_wait("return 'hello from lua'")
+        print(result)  # "hello from lua"
+
+        # handle cloud.transactionWait() requests from Lua
+        async def oncloudtransaction(data, text):
+            return "result for lua"
+        obniz.plugin.oncloudtransaction = oncloudtransaction
+
+        # save Lua to the device flash and reload it
+        # (storage-capable hardware, firmware >= 7.0.0)
+        obniz.storage.save_plugin_lua('os.log("Hello World")')
+        obniz.plugin.reload_lua()
+```
+
 ## Example
 Easy to integrate python libraries like TensorFlow.
 (need to install `tensorflow` and `opencv-python`)

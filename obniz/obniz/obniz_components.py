@@ -1,5 +1,6 @@
 from .libs.embeds.ble.ble import ObnizBLE
 from .libs.embeds.display import Display
+from .libs.embeds.storage import Storage
 from .libs.embeds.switch import ObnizSwitch
 from .libs.io_peripherals.ad import PeripheralAD
 from .libs.io_peripherals.i2c import PeripheralI2C
@@ -10,6 +11,7 @@ from .libs.io_peripherals.spi import PeripheralSPI
 from .libs.io_peripherals.uart import PeripheralUART
 from .libs.measurements.logicanalyzer import LogicAnalyzer
 from .libs.measurements.measure import ObnizMeasure
+from .libs.plugin.plugin import Plugin
 from .libs.hw.index import HW
 from .obniz_connection import ObnizConnection
 from .obniz_parts import ObnizParts
@@ -42,7 +44,8 @@ class ObnizComponents(ObnizParts):
 
         shared_map = {
             'logicAnalyzer': LogicAnalyzer,
-            'measure': ObnizMeasure
+            'measure': ObnizMeasure,
+            'plugin': Plugin
         }
 
         peripheral_map = {
@@ -57,7 +60,8 @@ class ObnizComponents(ObnizParts):
         embeds_map = {
             'display': Display,
             'switch': ObnizSwitch,
-            'ble': ObnizBLE
+            'ble': ObnizBLE,
+            'storage': Storage
         }
 
         for key in shared_map:
@@ -66,7 +70,7 @@ class ObnizComponents(ObnizParts):
             self._all_component_keys.append(key)
 
         for key in peripheral_map:
-            if hw_peripherals[key]:
+            if hw_peripherals.get(key):
                 units = hw_peripherals[key]['units']
                 classname = peripheral_map[key]
                 for unit_id in units:
