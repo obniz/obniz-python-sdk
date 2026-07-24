@@ -1,4 +1,4 @@
-import asyncio
+from ..utils.eventloop import get_event_loop
 
 class PeripheralAD:
     def __init__(self, obniz, id):
@@ -23,8 +23,7 @@ class PeripheralAD:
         return self.value
 
     def get_wait(self):
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["ad" + str(self.id)] = {"stream": False}

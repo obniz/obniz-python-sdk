@@ -1,5 +1,6 @@
 import asyncio
 
+from .libs.utils.eventloop import ensure_future, get_event_loop
 from .obniz_uis import ObnizUIs
 
 name = "obniz"
@@ -15,6 +16,7 @@ class Obniz(ObnizUIs):
     def repeat(self, callback, interval=100):
         if self.looper:
             self.looper = callback
+            self.repeatInterval = interval
             return
 
         self.looper = callback
@@ -28,12 +30,23 @@ class Obniz(ObnizUIs):
         self.loop()
 
     def loop(self):
-        if self.looper:
-            prom = self.looper()
-            if prom:
-                prom()
+        if not self.looper:
+            return
 
-            asyncio.get_event_loop().call_later(1, self.loop)
+        ret = self.looper()
+        if asyncio.iscoroutine(ret):
+            # wait for the async callback to finish before scheduling the next run
+            async def _run():
+                await ret
+                self._schedule_next_loop()
+
+            ensure_future(_run())
+        else:
+            self._schedule_next_loop()
+
+    def _schedule_next_loop(self):
+        if self.looper:
+            get_event_loop().call_later(self.repeatInterval / 1000, self.loop)
 
     def ws_on_close(self):
         super().ws_on_close()
@@ -43,7 +56,7 @@ class Obniz(ObnizUIs):
     def message(self, target, message):
         targets = []
         if type(target) is str:
-            targets.push(target)
+            targets.append(target)
         else:
             targets = target
 
@@ -66,7 +79,7 @@ class Obniz(ObnizUIs):
                 self.error({"alert": "error", "message": msg})
 
             if self.ondebug:
-                self.ondebug(obj.debug)
+                self.ondebug(obj["debug"])
 
 #######################
 # ReadParts

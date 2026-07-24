@@ -1,6 +1,8 @@
 import asyncio
 import datetime
 
+from ..utils.eventloop import get_event_loop
+
 
 class PeripheralIO_:  # noqa: N801
     def __init__(self, obniz):
@@ -53,8 +55,7 @@ class PeripheralIO_:  # noqa: N801
         if (type(repeat) is not int):
             raise Exception("please provide integer number like 1, 2, 3,,,")
         
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         name = "_repeatwait" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         if self._animation_identifier + 1 > 1000:
             self._animation_identifier = 0

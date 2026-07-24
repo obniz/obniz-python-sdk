@@ -1,4 +1,4 @@
-import asyncio
+from ..utils.eventloop import get_event_loop
 
 class ObnizSwitch:
     def __init__(self, obniz):
@@ -19,8 +19,7 @@ class ObnizSwitch:
             self.observers.append(future)
 
     def get_wait(self):
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["switch"] = "get"
@@ -28,8 +27,7 @@ class ObnizSwitch:
         return future
 
     def state_wait(self, is_pressed):
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         def on_change_for_state_wait(pressed):
             def noop(*args):
                 pass

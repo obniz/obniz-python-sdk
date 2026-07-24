@@ -1,7 +1,7 @@
 from pyee import AsyncIOEventEmitter
-import asyncio
 
 from .ble_helper import BleHelper
+from ...utils.eventloop import get_event_loop
 from ...utils.util import ObnizUtil
 
 
@@ -119,8 +119,7 @@ class BleAttributeAbstract:
     # }
 
     def read_wait(self):
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         def cb(params):
             if params["result"] == "success":
                 future.set_result(params["data"])

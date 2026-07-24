@@ -1,6 +1,7 @@
 from attrdict import AttrDefault
 
-import asyncio
+from obniz.obniz.libs.utils.eventloop import get_event_loop
+
 
 class Button:
     def __init__(self):
@@ -33,8 +34,7 @@ class Button:
         return ret == False
 
     def state_wait(self, is_pressed):
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         def onpress(pressed):
             def nothing(*args):
                 pass
