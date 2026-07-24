@@ -1,18 +1,17 @@
-import os
 import json
+import os
+import re
+
 
 class HW:
     @staticmethod
     def get_definition_for(hw):
-        if hw == 'obnizb1':
-            with open(os.path.join(os.path.dirname(__file__), 'obnizb1.json')) as f:
-                hw_obj = json.load(f)
-        elif hw == 'obnizb2':
-            with open(os.path.join(os.path.dirname(__file__), 'obnizb2.json')) as f:
-                hw_obj = json.load(f)
-        elif hw == 'esp32w':
-            with open(os.path.join(os.path.dirname(__file__), 'esp32w.json')) as f:
-                hw_obj = json.load(f)
-        else:
-            hw_obj = None
-        return hw_obj
+        if type(hw) is not str or not re.match(r"^[a-z0-9_]+$", hw):
+            return None
+
+        path = os.path.join(os.path.dirname(__file__), hw + '.json')
+        if not os.path.isfile(path):
+            return None
+
+        with open(path) as f:
+            return json.load(f)

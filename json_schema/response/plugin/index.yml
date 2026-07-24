@@ -1,0 +1,13 @@
+## YAML Template.
+##---
+$schema: http://json-schema.org/draft-04/schema#
+id: "/response/plugin"
+basePath: "plugin"
+
+"anyOf":
+  - {$ref:  "/response/plugin/receive"}
+  - {$ref:  "/response/plugin/frame"}
+  - {$ref:  "/response/plugin/error"}
+  - {$ref:  "/response/plugin/call_response"}
+  - {$ref:  "/response/plugin/cloud_transaction_request"}
+

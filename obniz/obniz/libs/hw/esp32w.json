@@ -1,5 +1,5 @@
 {
-  "rev": "1",
+  "rev": "2",
   "hw": "esp32w",
   "peripherals": {
     "io": {
@@ -71,12 +71,26 @@
     }
   },
   "embeds": {
-    "ble": {},
-    "display": {},
-    "switch": {}
-  }
+    "ble": {
+      "extended": false
+    }
+  },
+  "protocol": {
+    "tcp": {
+      "units": {
+        "0": {},
+        "1": {},
+        "2": {},
+        "3": {},
+        "4": {},
+        "5": {},
+        "6": {},
+        "7": {}
+      }
+    }
+  },
+  "network": {
+    "wifi": {}
+  },
+  "extraInterface": {}
 }
-
-
-
-

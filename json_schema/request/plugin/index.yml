@@ -1,0 +1,13 @@
+## YAML Template.
+##---
+$schema: http://json-schema.org/draft-04/schema#
+id: "/request/plugin"
+basePath: "plugin"
+description: "plugin command"
+
+"anyOf":
+  - {$ref: "/request/plugin/send"}
+  - {$ref: "/request/plugin/exec_lua"}
+  - {$ref: "/request/plugin/reload_lua"}
+  - {$ref: "/request/plugin/call_request"}
+  - {$ref: "/request/plugin/cloud_transaction_response"}

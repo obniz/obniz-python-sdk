@@ -25,3 +25,5 @@
         system : {$ref : "/response/system"}
         debug : {$ref : "/response/debug"}
         ws : {$ref : "/response/ws"}
+        plugin : {$ref : "/response/plugin"}
+        storage : {$ref : "/response/storage"}
