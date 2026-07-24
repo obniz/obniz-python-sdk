@@ -1,3 +1,5 @@
+import asyncio
+
 from .libs.embeds.ble.ble import ObnizBLE
 from .libs.embeds.display import Display
 from .libs.embeds.storage import Storage
@@ -15,9 +17,6 @@ from .libs.plugin.plugin import Plugin
 from .libs.hw.index import HW
 from .obniz_connection import ObnizConnection
 from .obniz_parts import ObnizParts
-
-import attrdict
-import asyncio
 
 
 class ObnizComponents(ObnizParts):
@@ -178,7 +177,7 @@ class ObnizComponents(ObnizParts):
         return self._get_free_peripheral_unit('i2c')
 
     def get_i2c_with_config(self, config):
-        if type(config) not in [dict, attrdict.default.AttrDefault]:
+        if not isinstance(config, dict):
             raise Exception("get_i2c_with_config need config arg")
         if config.get("i2c"):
             return config.get("i2c")
@@ -190,7 +189,7 @@ class ObnizComponents(ObnizParts):
         return self._get_free_peripheral_unit('spi')
 
     def get_spi_with_config(self, config):
-        if type(config) not in [dict, attrdict.default.AttrDefault]:
+        if not isinstance(config, dict):
             raise Exception("get_spi_with_config need config arg")
         if config.get("spi"):
             return config.get("spi")

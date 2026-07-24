@@ -1,4 +1,4 @@
-from attrdict import AttrDefault
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 
 class ServoMotor:
     def __init__(self):

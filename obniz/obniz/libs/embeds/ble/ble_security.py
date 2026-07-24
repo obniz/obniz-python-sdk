@@ -1,4 +1,4 @@
-from pyee import AsyncIOEventEmitter
+from pyee.asyncio import AsyncIOEventEmitter
 import semver
 
 class BleSecurity:
@@ -51,7 +51,7 @@ class BleSecurity:
             raise Exception(msg)
     
     def check_introduced_firmware(self, introduced_version, function_name):
-        res = semver.match(self.obniz.firmware_ver, "<=" + introduced_version)
+        res = semver.Version.parse(self.obniz.firmware_ver).match("<=" + introduced_version)
         if res:
             msg = (
                 "{} is available ".format(function_name) +

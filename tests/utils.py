@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 import websockets
+from websockets.protocol import State
 
 from obniz import Obniz
 from .obniz_json_validator import obniz_json_validator as validator
@@ -13,9 +14,11 @@ error_data_count = 0
 
 
 def create_server(port, on_connection):
-    wss = websockets.serve(on_connection, "localhost", port)
+    async def _start():
+        # websockets>=14 requires a running loop when the server is created
+        return await websockets.serve(on_connection, "localhost", port)
 
-    return asyncio.get_event_loop().run_until_complete(wss)
+    return asyncio.get_event_loop().run_until_complete(_start())
 
 
 def create_obniz(port, obniz_id):
@@ -25,7 +28,7 @@ def create_obniz(port, obniz_id):
 def setup_obniz(mocker):
     global server_data_count
 
-    stub = mocker.MagicMock(buffered_amount=0)
+    stub = mocker.MagicMock(buffered_amount=0, state=State.OPEN)
     # stub.on = mocker.stub()
     stub.send = AsyncMock()
     stub.close = AsyncMock()

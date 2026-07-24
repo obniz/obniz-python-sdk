@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "obniz"
+description = "obniz sdk for python"
+readme = "README.md"
+authors = [{ name = "yukisato", email = "yuki@yuki-sato.com" }]
+requires-python = ">=3.9"
+dependencies = [
+    "pyee==13.0.1",
+    "websockets>=14.2,<16",
+    "semver==3.0.4",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://obniz.io/"
+Repository = "https://github.com/obniz/obniz-python-sdk"
+
+[tool.setuptools.dynamic]
+version = { attr = "obniz.obniz.__version__.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["obniz*"]
+
+[tool.setuptools]
+include-package-data = true

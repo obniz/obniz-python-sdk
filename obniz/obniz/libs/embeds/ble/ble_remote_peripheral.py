@@ -1,6 +1,6 @@
 import json
 
-from pyee import AsyncIOEventEmitter
+from pyee.asyncio import AsyncIOEventEmitter
 
 from .ble_helper import BleHelper
 from .ble_remote_service import BleRemoteService

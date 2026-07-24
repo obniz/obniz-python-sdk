@@ -1,7 +1,6 @@
 import math
 
-from attrdict import AttrDefault
-
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 from obniz.obniz.libs.utils.eventloop import get_event_loop
 
 

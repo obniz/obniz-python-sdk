@@ -1,4 +1,4 @@
-from pyee import AsyncIOEventEmitter
+from pyee.asyncio import AsyncIOEventEmitter
 
 from .ble_helper import BleHelper
 from ...utils.eventloop import get_event_loop

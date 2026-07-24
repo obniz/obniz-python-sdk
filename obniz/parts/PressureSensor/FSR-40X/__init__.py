@@ -1,6 +1,6 @@
-from attrdict import AttrDefault
-
 import asyncio
+
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 
 class FSR40X:
     def __init__(self):

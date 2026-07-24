@@ -66,7 +66,7 @@ class Storage:
         if not fw:
             raise Exception("unknown obniz firmware version. connect first")
 
-        if semver.parse_version_info(fw).major < major:
+        if semver.Version.parse(fw).major < major:
             raise Exception(
                 "Please update obniz firmware >= {}.0.0".format(major)
             )

@@ -7,15 +7,14 @@ name = "pypi"
 test = "pytest -vv"
 lint = "sh -c 'flake8 && pipenv run format --check'"
 format = "black obniz/ tests/ "
-build = "sh -c 'rm  -rf build/ dist/ obniz.egg-info/ && python setup.py sdist bdist_wheel'"
+build = "sh -c 'rm -rf build/ dist/ obniz.egg-info/ && python -m build'"
 testsubmit = "twine upload --repository testpypi dist/*"
 # no shortcut for production  submit for safe
 
 [packages]
-pyee = "==6.0.0"
-websockets = ">=12,<14"
-attrdict3 = "==2.0.2"
-semver = "==2.8.1"
+pyee = "==13.0.1"
+websockets = ">=14.2,<16"
+semver = "==3.0.4"
 
 [dev-packages]
 # "black" requires python 3.6+
@@ -30,6 +29,7 @@ pep8-naming = "*"
 pytest = "*"
 pytest-mock = "*"
 pyyaml = "*"
+build = "*"
 setuptools = "*"
 wheel = "*"
 twine = "*"

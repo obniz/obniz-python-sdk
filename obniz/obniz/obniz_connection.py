@@ -1,8 +1,9 @@
 import inspect
 import json
 
-from pyee import AsyncIOEventEmitter
+from pyee.asyncio import AsyncIOEventEmitter
 import websockets
+from websockets.protocol import State
 
 from .__version__ import __version__
 from .libs.utils.eventloop import ensure_future, get_event_loop
@@ -146,7 +147,7 @@ class ObnizConnection:
         if desired_server:
             server = desired_server
 
-        if self.socket and self.socket.open:
+        if self._socket_open(self.socket):
             self.close()
 
         url = server + "/obniz/{}/ws/1".format(self.id)
@@ -232,7 +233,7 @@ class ObnizConnection:
 
     def _disconnect_local(self):
         if self.socket_local:
-            if self.socket.open:
+            if self._socket_open(self.socket):
                 self.socket_local.close()
 
             self.clear_socket(self.socket_local)
@@ -273,8 +274,12 @@ class ObnizConnection:
         #     socket.onerror = null
         # }
 
+    @staticmethod
+    def _socket_open(socket):
+        return socket is not None and socket.state is State.OPEN
+
     def connect(self):
-        if self.socket and self.socket.open:
+        if self._socket_open(self.socket):
             return
 
         self.wsconnect()
@@ -283,7 +288,7 @@ class ObnizConnection:
         # self._drainQueued()
         self._disconnect_local()
         if self.socket:
-            if self.socket.open:
+            if self._socket_open(self.socket):
                 #  Connecting & Connected
                 self.connection_state = 'closing'
                 ensure_future(self.socket.close(1000, "close"))
@@ -300,7 +305,7 @@ class ObnizConnection:
             self._wait_for_local_connect_ready_timer = None
         else:
             # obniz.js hasn't wait local_connect
-            if self.socket_local and self.socket.open:
+            if self.socket_local and self._socket_open(self.socket):
                 # delayed connect
                 should_call = False
             else:
@@ -358,7 +363,7 @@ class ObnizConnection:
                 )
             return
 
-        if self.socket and self.socket.open:
+        if self._socket_open(self.socket):
             ensure_future(self.socket.send(data))
             # if self.socket.buffered_amount > self.bufferd_amound_warn_bytes:
             #     self.warning(

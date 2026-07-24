@@ -1,11 +1,10 @@
 import json
-import attrdict
 
 class ObnizUtil:
     @classmethod
     def _key_filter(cls, params, keys):
         filterd_params = {}
-        if type(params) not in [dict, attrdict.default.AttrDefault]:
+        if not isinstance(params, dict):
             return filterd_params
 
         for key in [key for key in params.keys() if key in keys]:
@@ -15,7 +14,7 @@ class ObnizUtil:
 
     @classmethod
     def _required_keys(cls, params, keys):
-        if type(params) not in [dict, attrdict.default.AttrDefault]:
+        if not isinstance(params, dict):
             return keys[0]
 
         for key in keys:

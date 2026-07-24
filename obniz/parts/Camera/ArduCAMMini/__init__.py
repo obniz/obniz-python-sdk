@@ -1,7 +1,7 @@
-from attrdict import AttrDefault
-
 import asyncio
 import base64
+
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 
 class ArduCAMMini:
     def __init__(self):

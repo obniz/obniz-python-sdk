@@ -1,5 +1,5 @@
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 from .. import AnalogTemplatureSensor
-from attrdict import AttrDefault
 
 class LM60(AnalogTemplatureSensor):
     @staticmethod
