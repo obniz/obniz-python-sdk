@@ -1,4 +1,4 @@
-import asyncio
+from ..utils.eventloop import get_event_loop
 
 class PeripheralIO:
     def __init__(self, obniz, id):
@@ -66,7 +66,7 @@ class PeripheralIO:
         return self.value
 
     def input_wait(self):
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["io" + str(self.id)] = {"direction": "input", "stream": False}

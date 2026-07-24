@@ -1,8 +1,9 @@
+import math
+
 from attrdict import AttrDefault
 
-import asyncio
+from obniz.obniz.libs.utils.eventloop import get_event_loop
 
-import math
 
 class HCSR04:
     def __init__(self):
@@ -62,8 +63,7 @@ class HCSR04:
         )
 
     def measure_wait(self):
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         self.measure(future=future)
         return future
 

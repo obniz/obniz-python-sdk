@@ -8,6 +8,7 @@ class LogicAnalyzer:
 
     def _reset(self):
         self.onmeasured = None
+        self.measured = None
 
     def start(self, params):
         err = ObnizUtil._required_keys(params, ["io", "interval", "duration"])
@@ -47,4 +48,4 @@ class LogicAnalyzer:
             if not self.measured:
                 self.measured = []
 
-            self.measured.push(obj["data"])
+            self.measured.append(obj["data"])

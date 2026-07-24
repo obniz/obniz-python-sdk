@@ -1,10 +1,11 @@
-import asyncio
+import inspect
 import json
 
 from pyee import AsyncIOEventEmitter
 import websockets
 
 from .__version__ import __version__
+from .libs.utils.eventloop import ensure_future, get_event_loop
 from .libs.utils.util import ObnizUtil
 
 class ObnizConnection:
@@ -104,7 +105,7 @@ class ObnizConnection:
             self.emitter.once("closed", lambda: cb(False))
 
         if timeout:
-            asyncio.get_event_loop().call_later(timeout, lambda: cb(False))
+            get_event_loop().call_later(timeout, lambda: cb(False))
 
         self.connect()
 
@@ -177,7 +178,7 @@ class ObnizConnection:
                         self.error(e)
                         break
 
-        asyncio.ensure_future(connecting())
+        ensure_future(connecting())
 
     #   _connectLocal(host) {
     #     const url = 'ws://' + host
@@ -285,7 +286,7 @@ class ObnizConnection:
             if self.socket.open:
                 #  Connecting & Connected
                 self.connection_state = 'closing'
-                self.socket.close(1000, "close")
+                ensure_future(self.socket.close(1000, "close"))
 
             self.clear_socket(self.socket)
             self.socket = None
@@ -312,8 +313,8 @@ class ObnizConnection:
         if should_call:
             if self.onconnect:
                 try:
-                    if asyncio.iscoroutinefunction(self.onconnect):
-                        asyncio.ensure_future(self.onconnect(self))
+                    if inspect.iscoroutinefunction(self.onconnect):
+                        ensure_future(self.onconnect(self))
                     else:
                         self.onconnect(self)
                 except Exception as e:
@@ -348,7 +349,7 @@ class ObnizConnection:
         self._send_routed(send_data)
 
     def _send_routed(self, data):
-        if self.socket_local and self.socket_local.on and type(data) is not str:
+        if self.socket_local is not None and type(data) is not str:
             self.print_debug("send via local")
             self.socket_local.send(data)
             if self.socket_local.buffered_amount > self.bufferd_amound_warn_bytes:
@@ -358,7 +359,7 @@ class ObnizConnection:
             return
 
         if self.socket and self.socket.open:
-            asyncio.ensure_future(self.socket.send(data))
+            ensure_future(self.socket.send(data))
             # if self.socket.buffered_amount > self.bufferd_amound_warn_bytes:
             #     self.warning(
             #         f'over {self.socket.buffered_amount} bytes queued'
@@ -435,7 +436,7 @@ class ObnizConnection:
             self.print_debug("WS connection changed to " + server)
 
             # close current ws immidiately
-            self.socket.close(1000, "close")
+            ensure_future(self.socket.close(1000, "close"))
             self.clear_socket(self.socket)
             self.socket = None
 

@@ -28,7 +28,7 @@ def setup_obniz(mocker):
     stub = mocker.MagicMock(buffered_amount=0)
     # stub.on = mocker.stub()
     stub.send = AsyncMock()
-    # stub.close = mocker.stub()
+    stub.close = AsyncMock()
     # stub.removeAllListeners = mocker.stub()
 
     mocker.patch("obniz.Obniz.wsconnect")

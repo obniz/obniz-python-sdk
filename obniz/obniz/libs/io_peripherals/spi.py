@@ -1,7 +1,8 @@
+import semver
+
+from ..utils.eventloop import get_event_loop
 from ..utils.util import ObnizUtil
 
-import asyncio
-import semver
 
 class PeripheralSPI:
     def __init__(self, obniz, id):
@@ -99,7 +100,7 @@ class PeripheralSPI:
                 + ". Please update obniz firmware"
             )
 
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         self.add_observer(future)
         obj = {}
         obj["spi" + str(self.id)] = {"data": data, "read": True}

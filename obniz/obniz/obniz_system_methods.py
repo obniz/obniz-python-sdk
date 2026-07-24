@@ -2,6 +2,8 @@ import math
 from random import random
 from time import time
 import asyncio
+
+from .libs.utils.eventloop import get_event_loop
 from .obniz_components import ObnizComponents
 
 
@@ -57,8 +59,7 @@ class ObnizSystemMethods(ObnizComponents):
         obj = {"system": {"ping": {"key": buf}}}
 
         self.send(obj, {"local_connect": not force_global_network})
-        # get_running_loop() function is preferred on Python >= 3.7
-        future = asyncio.get_event_loop().create_future()
+        future = get_event_loop().create_future()
         def cb(system_obj):
             for i, b in enumerate(buf):
                 if b != system_obj["pong"]["key"][i]:

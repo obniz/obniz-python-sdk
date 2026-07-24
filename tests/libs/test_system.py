@@ -82,7 +82,8 @@ class TestSystem:
         assert_finished(obniz)
 
     def test_wait(self, obniz):
-        obniz.wait(500)
+        coro = obniz.wait(500)
+        coro.close()  # payload check only; skip the actual sleep
         assert_send(obniz, [{"system": {"wait": 500}}])
         assert_finished(obniz)
 
