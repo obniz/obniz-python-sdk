@@ -5,7 +5,7 @@
 [obniz](https://obniz.io/)をpythonから操作するためのsdkです。
 [obnizBoard](https://obniz.io/ja/doc/obniz_board_hobby_90/hw_overview)と[obnizOS](https://obniz.io/ja/doc/obnizos/os_overview)に対応しています
 
-**Python 3.8以上**で動作します。
+**Python 3.9以上**で動作します。
 
 <img src="https://object-storage.tyo1.conoha.io/v1/nc_35a49f4e51c74e35ad3493c52d37f63e/images/obniz-python-readme.gif" width="100%" />
 

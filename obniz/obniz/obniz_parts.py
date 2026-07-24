@@ -1,7 +1,6 @@
-from attrdict import AttrDefault
-
-from .obniz_connection import ObnizConnection
+from .libs.utils.attr_default import AttrDefault
 from .libs.utils.util import ObnizUtil
+from .obniz_connection import ObnizConnection
 
 _parts = {}
 

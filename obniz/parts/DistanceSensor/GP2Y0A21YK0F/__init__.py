@@ -1,7 +1,7 @@
-from attrdict import AttrDefault
-
 import asyncio
 import math
+
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 
 class GP2Y0A21YK0F:
     def __init__(self):

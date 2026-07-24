@@ -30,7 +30,7 @@ class TestInit:
         loop = asyncio.get_event_loop()
         future = loop.create_future()
 
-        async def on_connection(websocket, path):
+        async def on_connection(websocket):
             print("server: connected")
 
             future.set_result(None)
@@ -53,7 +53,7 @@ class TestInit:
         loop = asyncio.get_event_loop()
         future = loop.create_future()
 
-        async def on_connection(websocket, path):
+        async def on_connection(websocket):
             try:
                 print("server(" + str(port) + "): connected")
                 future.set_result(websocket)
@@ -79,7 +79,7 @@ class TestInit:
         # expect(server.clients.size, 'before server not connected').to.equal(1)
         future2 = loop.create_future()
 
-        async def on_connection2(websocket, path):
+        async def on_connection2(websocket):
             try:
                 print("server(" + str(port2) + "): connected")
                 future2.set_result(None)

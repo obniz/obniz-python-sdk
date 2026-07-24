@@ -1,2 +1,9 @@
 graft obniz/obniz
 graft obniz/parts
+
+# documentation assets under obniz/parts have no runtime purpose --
+# excluding them keeps the wheel small (photos/GIFs alone are ~13MB)
+global-exclude *.jpg *.jpeg *.png *.gif *.fzz
+recursive-exclude obniz/parts index.json
+recursive-exclude obniz/parts README.md README-ja.md
+global-exclude __pycache__ *.py[cod]

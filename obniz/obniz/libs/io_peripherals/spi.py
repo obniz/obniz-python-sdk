@@ -90,7 +90,7 @@ class PeripheralSPI:
         if not self.used:
             raise Exception("spi{} is not started".format(self.id))
 
-        if semver.match(self.obniz.firmware_ver, "<=1.0.2") and len(data) > 32:
+        if semver.Version.parse(self.obniz.firmware_ver).match("<=1.0.2") and len(data) > 32:
             raise Exception(
                 "with your obniz "
                 + self.obniz.firmware_ver
@@ -110,7 +110,7 @@ class PeripheralSPI:
     def write(self, data):
         if not self.used:
             raise Exception("spi{0} is not started".format(self.id))
-        if semver.match(self.obniz.firmware_ver, "<=1.0.2") and len(data) > 32:
+        if semver.Version.parse(self.obniz.firmware_ver).match("<=1.0.2") and len(data) > 32:
             raise Exception(
                 "with your obniz {0}. spi max length=32byte but yours {1}. Please update obniz firmware".format(
                     self.obniz.firmware_ver, len(data)

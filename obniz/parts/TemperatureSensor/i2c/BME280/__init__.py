@@ -1,7 +1,7 @@
 import asyncio
 import math
 
-from attrdict import AttrDefault
+from obniz.obniz.libs.utils.attr_default import AttrDefault
 
 class BME280:
     def __init__(self):

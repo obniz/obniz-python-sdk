@@ -117,14 +117,14 @@ class Plugin:
         if not fw:
             raise Exception("unknown obniz firmware version. connect first")
 
-        info = semver.parse_version_info(fw)
+        info = semver.Version.parse(fw)
         if version == "7.1.0":
             # accept prereleases like 7.1.0-beta.0, as obniz.js does
             ok = info.major > 7 or (info.major == 7 and info.minor >= 1)
         elif version == "7.0.0":
             ok = info.major >= 7
         else:
-            ok = not semver.match(fw, "<" + version)
+            ok = not info.match("<" + version)
 
         if not ok:
             raise Exception("Please update obniz firmware >= " + version)
